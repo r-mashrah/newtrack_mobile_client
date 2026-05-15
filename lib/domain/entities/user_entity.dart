@@ -11,12 +11,12 @@ class UserEntity with _$UserEntity {
     String? fullName,
     String? phoneNumber,
     String? avatarUrl,
-    required String authToken,
+    required String userApiHash,
     required DateTime createdAt,
     Map<String, dynamic>? preferences,
   }) = _UserEntity;
 
   const UserEntity._();
 
-  bool get isAuthenticated => authToken.isNotEmpty;
+  bool get isAuthenticated => userApiHash.isNotEmpty;
 }

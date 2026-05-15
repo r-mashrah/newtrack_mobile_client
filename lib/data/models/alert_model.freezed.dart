@@ -215,7 +215,7 @@ class __$$AlertModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$AlertModelImpl implements _AlertModel {
+class _$AlertModelImpl extends _AlertModel {
   const _$AlertModelImpl(
       {required this.id,
       required this.name,
@@ -226,7 +226,8 @@ class _$AlertModelImpl implements _AlertModel {
       this.outsideGeofence = false,
       required this.notificationType,
       this.isActive = true,
-      this.commandEnabled = false});
+      this.commandEnabled = false})
+      : super._();
 
   factory _$AlertModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$AlertModelImplFromJson(json);
@@ -314,7 +315,7 @@ class _$AlertModelImpl implements _AlertModel {
   }
 }
 
-abstract class _AlertModel implements AlertModel {
+abstract class _AlertModel extends AlertModel {
   const factory _AlertModel(
       {required final String id,
       required final String name,
@@ -326,6 +327,7 @@ abstract class _AlertModel implements AlertModel {
       required final String notificationType,
       final bool isActive,
       final bool commandEnabled}) = _$AlertModelImpl;
+  const _AlertModel._() : super._();
 
   factory _AlertModel.fromJson(Map<String, dynamic> json) =
       _$AlertModelImpl.fromJson;

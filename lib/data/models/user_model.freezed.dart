@@ -26,7 +26,8 @@ mixin _$UserModel {
   String? get fullName => throw _privateConstructorUsedError;
   String? get phoneNumber => throw _privateConstructorUsedError;
   String? get avatarUrl => throw _privateConstructorUsedError;
-  String get authToken => throw _privateConstructorUsedError;
+  @JsonKey(name: 'user_api_hash')
+  String get userApiHash => throw _privateConstructorUsedError;
   String get createdAt => throw _privateConstructorUsedError;
   Map<String, dynamic>? get preferences => throw _privateConstructorUsedError;
 
@@ -48,7 +49,7 @@ abstract class $UserModelCopyWith<$Res> {
       String? fullName,
       String? phoneNumber,
       String? avatarUrl,
-      String authToken,
+      @JsonKey(name: 'user_api_hash') String userApiHash,
       String createdAt,
       Map<String, dynamic>? preferences});
 }
@@ -72,7 +73,7 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? fullName = freezed,
     Object? phoneNumber = freezed,
     Object? avatarUrl = freezed,
-    Object? authToken = null,
+    Object? userApiHash = null,
     Object? createdAt = null,
     Object? preferences = freezed,
   }) {
@@ -101,9 +102,9 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.avatarUrl
           : avatarUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      authToken: null == authToken
-          ? _value.authToken
-          : authToken // ignore: cast_nullable_to_non_nullable
+      userApiHash: null == userApiHash
+          ? _value.userApiHash
+          : userApiHash // ignore: cast_nullable_to_non_nullable
               as String,
       createdAt: null == createdAt
           ? _value.createdAt
@@ -132,7 +133,7 @@ abstract class _$$UserModelImplCopyWith<$Res>
       String? fullName,
       String? phoneNumber,
       String? avatarUrl,
-      String authToken,
+      @JsonKey(name: 'user_api_hash') String userApiHash,
       String createdAt,
       Map<String, dynamic>? preferences});
 }
@@ -154,7 +155,7 @@ class __$$UserModelImplCopyWithImpl<$Res>
     Object? fullName = freezed,
     Object? phoneNumber = freezed,
     Object? avatarUrl = freezed,
-    Object? authToken = null,
+    Object? userApiHash = null,
     Object? createdAt = null,
     Object? preferences = freezed,
   }) {
@@ -183,9 +184,9 @@ class __$$UserModelImplCopyWithImpl<$Res>
           ? _value.avatarUrl
           : avatarUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      authToken: null == authToken
-          ? _value.authToken
-          : authToken // ignore: cast_nullable_to_non_nullable
+      userApiHash: null == userApiHash
+          ? _value.userApiHash
+          : userApiHash // ignore: cast_nullable_to_non_nullable
               as String,
       createdAt: null == createdAt
           ? _value.createdAt
@@ -209,7 +210,7 @@ class _$UserModelImpl extends _UserModel {
       this.fullName,
       this.phoneNumber,
       this.avatarUrl,
-      required this.authToken,
+      @JsonKey(name: 'user_api_hash') required this.userApiHash,
       required this.createdAt,
       final Map<String, dynamic>? preferences})
       : _preferences = preferences,
@@ -231,7 +232,8 @@ class _$UserModelImpl extends _UserModel {
   @override
   final String? avatarUrl;
   @override
-  final String authToken;
+  @JsonKey(name: 'user_api_hash')
+  final String userApiHash;
   @override
   final String createdAt;
   final Map<String, dynamic>? _preferences;
@@ -246,7 +248,7 @@ class _$UserModelImpl extends _UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, username: $username, email: $email, fullName: $fullName, phoneNumber: $phoneNumber, avatarUrl: $avatarUrl, authToken: $authToken, createdAt: $createdAt, preferences: $preferences)';
+    return 'UserModel(id: $id, username: $username, email: $email, fullName: $fullName, phoneNumber: $phoneNumber, avatarUrl: $avatarUrl, userApiHash: $userApiHash, createdAt: $createdAt, preferences: $preferences)';
   }
 
   @override
@@ -264,8 +266,8 @@ class _$UserModelImpl extends _UserModel {
                 other.phoneNumber == phoneNumber) &&
             (identical(other.avatarUrl, avatarUrl) ||
                 other.avatarUrl == avatarUrl) &&
-            (identical(other.authToken, authToken) ||
-                other.authToken == authToken) &&
+            (identical(other.userApiHash, userApiHash) ||
+                other.userApiHash == userApiHash) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             const DeepCollectionEquality()
@@ -282,7 +284,7 @@ class _$UserModelImpl extends _UserModel {
       fullName,
       phoneNumber,
       avatarUrl,
-      authToken,
+      userApiHash,
       createdAt,
       const DeepCollectionEquality().hash(_preferences));
 
@@ -308,7 +310,7 @@ abstract class _UserModel extends UserModel {
       final String? fullName,
       final String? phoneNumber,
       final String? avatarUrl,
-      required final String authToken,
+      @JsonKey(name: 'user_api_hash') required final String userApiHash,
       required final String createdAt,
       final Map<String, dynamic>? preferences}) = _$UserModelImpl;
   const _UserModel._() : super._();
@@ -329,7 +331,8 @@ abstract class _UserModel extends UserModel {
   @override
   String? get avatarUrl;
   @override
-  String get authToken;
+  @JsonKey(name: 'user_api_hash')
+  String get userApiHash;
   @override
   String get createdAt;
   @override

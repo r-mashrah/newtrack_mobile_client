@@ -35,6 +35,43 @@ class DeviceModel with _$DeviceModel {
   factory DeviceModel.fromJson(Map<String, dynamic> json) =>
       _$DeviceModelFromJson(json);
 
+  // دالة لتحويل بيانات GPSWox API إلى الـ Model الخاص بنا
+  factory DeviceModel.fromGpswoxJson(Map<String, dynamic> json) {
+    // معالجة الحالة (Status)
+    String status = 'offline';
+    final onlineStr = json['online']?.toString().toLowerCase();
+    if (onlineStr == 'online') {
+      final double s = double.tryParse(json['speed']?.toString() ?? '0') ?? 0;
+      status = s > 5 ? 'moving' : 'stopped';
+    } else if (onlineStr == 'ack') {
+      status = 'parked';
+    }
+
+    return DeviceModel(
+      id: json['id']?.toString() ?? '',
+      name: json['name']?.toString() ?? 'Unknown Device',
+      imei: json['imei']?.toString() ?? '',
+      plateNumber: json['plate_number']?.toString(),
+      simNumber: json['sim_number']?.toString(),
+      model: json['device_model']?.toString(),
+      icon: json['icon_type']?.toString(),
+      color: json['tail_color']?.toString(),
+      isActive: json['active'] == true || json['active'] == 1 || json['active'] == '1',
+      status: status,
+      lastLocation: {
+        'latitude': double.tryParse(json['lat']?.toString() ?? '0') ?? 0.0,
+        'longitude': double.tryParse(json['lng']?.toString() ?? '0') ?? 0.0,
+        'timestamp': json['time']?.toString() ?? DateTime.now().toIso8601String(),
+        'altitude': double.tryParse(json['altitude']?.toString() ?? '0'),
+        'speed': double.tryParse(json['speed']?.toString() ?? '0'),
+        'bearing': double.tryParse(json['course']?.toString() ?? '0'),
+      },
+      speed: double.tryParse(json['speed']?.toString() ?? '0'),
+      lastUpdate: json['time']?.toString(),
+      additionalData: json, // حفظ كامل البيانات الأصلية كبيانات إضافية
+    );
+  }
+
   // تحويل من Model إلى Entity
   DeviceEntity toEntity() {
     return DeviceEntity(

@@ -22,7 +22,7 @@ mixin _$UserEntity {
   String? get fullName => throw _privateConstructorUsedError;
   String? get phoneNumber => throw _privateConstructorUsedError;
   String? get avatarUrl => throw _privateConstructorUsedError;
-  String get authToken => throw _privateConstructorUsedError;
+  String get userApiHash => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   Map<String, dynamic>? get preferences => throw _privateConstructorUsedError;
 
@@ -44,7 +44,7 @@ abstract class $UserEntityCopyWith<$Res> {
       String? fullName,
       String? phoneNumber,
       String? avatarUrl,
-      String authToken,
+      String userApiHash,
       DateTime createdAt,
       Map<String, dynamic>? preferences});
 }
@@ -68,7 +68,7 @@ class _$UserEntityCopyWithImpl<$Res, $Val extends UserEntity>
     Object? fullName = freezed,
     Object? phoneNumber = freezed,
     Object? avatarUrl = freezed,
-    Object? authToken = null,
+    Object? userApiHash = null,
     Object? createdAt = null,
     Object? preferences = freezed,
   }) {
@@ -97,9 +97,9 @@ class _$UserEntityCopyWithImpl<$Res, $Val extends UserEntity>
           ? _value.avatarUrl
           : avatarUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      authToken: null == authToken
-          ? _value.authToken
-          : authToken // ignore: cast_nullable_to_non_nullable
+      userApiHash: null == userApiHash
+          ? _value.userApiHash
+          : userApiHash // ignore: cast_nullable_to_non_nullable
               as String,
       createdAt: null == createdAt
           ? _value.createdAt
@@ -128,7 +128,7 @@ abstract class _$$UserEntityImplCopyWith<$Res>
       String? fullName,
       String? phoneNumber,
       String? avatarUrl,
-      String authToken,
+      String userApiHash,
       DateTime createdAt,
       Map<String, dynamic>? preferences});
 }
@@ -150,7 +150,7 @@ class __$$UserEntityImplCopyWithImpl<$Res>
     Object? fullName = freezed,
     Object? phoneNumber = freezed,
     Object? avatarUrl = freezed,
-    Object? authToken = null,
+    Object? userApiHash = null,
     Object? createdAt = null,
     Object? preferences = freezed,
   }) {
@@ -179,9 +179,9 @@ class __$$UserEntityImplCopyWithImpl<$Res>
           ? _value.avatarUrl
           : avatarUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      authToken: null == authToken
-          ? _value.authToken
-          : authToken // ignore: cast_nullable_to_non_nullable
+      userApiHash: null == userApiHash
+          ? _value.userApiHash
+          : userApiHash // ignore: cast_nullable_to_non_nullable
               as String,
       createdAt: null == createdAt
           ? _value.createdAt
@@ -205,7 +205,7 @@ class _$UserEntityImpl extends _UserEntity {
       this.fullName,
       this.phoneNumber,
       this.avatarUrl,
-      required this.authToken,
+      required this.userApiHash,
       required this.createdAt,
       final Map<String, dynamic>? preferences})
       : _preferences = preferences,
@@ -224,7 +224,7 @@ class _$UserEntityImpl extends _UserEntity {
   @override
   final String? avatarUrl;
   @override
-  final String authToken;
+  final String userApiHash;
   @override
   final DateTime createdAt;
   final Map<String, dynamic>? _preferences;
@@ -239,7 +239,7 @@ class _$UserEntityImpl extends _UserEntity {
 
   @override
   String toString() {
-    return 'UserEntity(id: $id, username: $username, email: $email, fullName: $fullName, phoneNumber: $phoneNumber, avatarUrl: $avatarUrl, authToken: $authToken, createdAt: $createdAt, preferences: $preferences)';
+    return 'UserEntity(id: $id, username: $username, email: $email, fullName: $fullName, phoneNumber: $phoneNumber, avatarUrl: $avatarUrl, userApiHash: $userApiHash, createdAt: $createdAt, preferences: $preferences)';
   }
 
   @override
@@ -257,8 +257,8 @@ class _$UserEntityImpl extends _UserEntity {
                 other.phoneNumber == phoneNumber) &&
             (identical(other.avatarUrl, avatarUrl) ||
                 other.avatarUrl == avatarUrl) &&
-            (identical(other.authToken, authToken) ||
-                other.authToken == authToken) &&
+            (identical(other.userApiHash, userApiHash) ||
+                other.userApiHash == userApiHash) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             const DeepCollectionEquality()
@@ -274,7 +274,7 @@ class _$UserEntityImpl extends _UserEntity {
       fullName,
       phoneNumber,
       avatarUrl,
-      authToken,
+      userApiHash,
       createdAt,
       const DeepCollectionEquality().hash(_preferences));
 
@@ -293,7 +293,7 @@ abstract class _UserEntity extends UserEntity {
       final String? fullName,
       final String? phoneNumber,
       final String? avatarUrl,
-      required final String authToken,
+      required final String userApiHash,
       required final DateTime createdAt,
       final Map<String, dynamic>? preferences}) = _$UserEntityImpl;
   const _UserEntity._() : super._();
@@ -311,7 +311,7 @@ abstract class _UserEntity extends UserEntity {
   @override
   String? get avatarUrl;
   @override
-  String get authToken;
+  String get userApiHash;
   @override
   DateTime get createdAt;
   @override

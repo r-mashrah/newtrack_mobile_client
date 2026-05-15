@@ -15,9 +15,7 @@ Future<void> bootstrap() async {
 
   runApp(
     ProviderScope(
-      overrides: [
-        cachingServiceProvider.overrideWithValue(cachingService),
-      ],
+      overrides: [cachingServiceProvider.overrideWithValue(cachingService)],
       child: const MyApp(),
     ),
   );
@@ -34,7 +32,7 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
     final themeState = ref.watch(themeNotifierProvider);
-    
+
     // نستخدم العربية كافتراضية إذا لم تكن محددة
     final locale = Locale(themeState.localeCode == 'en' ? 'en' : 'ar');
 
@@ -48,10 +46,7 @@ class MyApp extends ConsumerWidget {
       themeMode: themeState.themeMode,
       routerConfig: router,
       locale: locale,
-      supportedLocales: const [
-        Locale('ar', ''),
-        Locale('en', ''),
-      ],
+      supportedLocales: const [Locale('ar', ''), Locale('en', '')],
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -61,7 +56,9 @@ class MyApp extends ConsumerWidget {
       // ضمان اتجاه RTL للعربية
       builder: (context, child) {
         return Directionality(
-          textDirection: locale.languageCode == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+          textDirection: locale.languageCode == 'ar'
+              ? TextDirection.rtl
+              : TextDirection.ltr,
           child: child!,
         );
       },

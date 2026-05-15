@@ -14,7 +14,7 @@ _$UserModelImpl _$$UserModelImplFromJson(Map<String, dynamic> json) =>
       fullName: json['fullName'] as String?,
       phoneNumber: json['phoneNumber'] as String?,
       avatarUrl: json['avatarUrl'] as String?,
-      authToken: json['authToken'] as String,
+      userApiHash: json['user_api_hash'] as String,
       createdAt: json['createdAt'] as String,
       preferences: json['preferences'] as Map<String, dynamic>?,
     );
@@ -27,7 +27,7 @@ Map<String, dynamic> _$$UserModelImplToJson(_$UserModelImpl instance) =>
       'fullName': instance.fullName,
       'phoneNumber': instance.phoneNumber,
       'avatarUrl': instance.avatarUrl,
-      'authToken': instance.authToken,
+      'user_api_hash': instance.userApiHash,
       'createdAt': instance.createdAt,
       'preferences': instance.preferences,
     };

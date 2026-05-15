@@ -52,7 +52,7 @@ class MockAuthDataSource implements AuthDataSource {
         username: username,
         email: '$username@newtrack.com',
         fullName: 'Demo User',
-        authToken: 'mock_token_${DateTime.now().millisecondsSinceEpoch}',
+        userApiHash: 'mock_token_${DateTime.now().millisecondsSinceEpoch}',
         createdAt: DateTime.now(),
       );
 
@@ -67,7 +67,7 @@ class MockAuthDataSource implements AuthDataSource {
         username: username,
         email: '$username@newtrack.com',
         fullName: 'System Administrator',
-        authToken: 'mock_admin_token_${DateTime.now().millisecondsSinceEpoch}',
+        userApiHash: 'mock_admin_token_${DateTime.now().millisecondsSinceEpoch}',
         createdAt: DateTime.now(),
       );
 

@@ -13,7 +13,7 @@ class UserModel with _$UserModel {
     String? fullName,
     String? phoneNumber,
     String? avatarUrl,
-    required String authToken,
+    @JsonKey(name: 'user_api_hash') required String userApiHash,
     required String createdAt,
     Map<String, dynamic>? preferences,
   }) = _UserModel;
@@ -32,7 +32,7 @@ class UserModel with _$UserModel {
       fullName: fullName,
       phoneNumber: phoneNumber,
       avatarUrl: avatarUrl,
-      authToken: authToken,
+      userApiHash: userApiHash,
       createdAt: DateTime.parse(createdAt),
       preferences: preferences,
     );
@@ -47,7 +47,7 @@ class UserModel with _$UserModel {
       fullName: entity.fullName,
       phoneNumber: entity.phoneNumber,
       avatarUrl: entity.avatarUrl,
-      authToken: entity.authToken,
+      userApiHash: entity.userApiHash,
       createdAt: entity.createdAt.toIso8601String(),
       preferences: entity.preferences,
     );
