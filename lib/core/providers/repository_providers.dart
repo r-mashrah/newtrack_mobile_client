@@ -1,12 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import '../../data/datasources/mock_auth_datasource.dart'; // For AuthDataSource interface
+import '../../data/datasources/server_datasource.dart';
+import '../../data/datasources/auth_datasource.dart'; // For AuthDataSource interface
 import '../../data/datasources/remote_auth_datasource.dart';
 import 'caching_provider.dart';
 import 'api_client_provider.dart';
-import '../../data/datasources/mock_device_datasource.dart'; // For DeviceDataSource interface
+import '../../data/datasources/device_datasource.dart'; // For DeviceDataSource interface
 import '../../data/datasources/remote_device_datasource.dart';
-import '../../data/datasources/mock_server_datasource.dart';
+import '../../data/datasources/remote_server_datasource.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../data/repositories/device_repository_impl.dart';
 import '../../data/repositories/server_repository_impl.dart';
@@ -22,6 +23,10 @@ import '../../domain/repositories/alerts_repository.dart';
 import '../../data/datasources/remote_geofences_datasource.dart';
 import '../../data/repositories/geofences_repository_impl.dart';
 import '../../domain/repositories/geofences_repository.dart';
+import '../../data/datasources/remote_poi_datasource.dart';
+import '../../data/repositories/poi_repository_impl.dart';
+import '../../domain/repositories/poi_repository.dart';
+import '../../data/datasources/remote_tasks_datasource.dart';
 
 // ==================== Data Source Providers ====================
 
@@ -38,7 +43,8 @@ final deviceDataSourceProvider = Provider<DeviceDataSource>((ref) {
 });
 
 final serverDataSourceProvider = Provider<ServerDataSource>((ref) {
-  return MockServerDataSource();
+  final cachingService = ref.watch(cachingServiceProvider);
+  return RemoteServerDataSource(cachingService);
 });
 
 final historyDataSourceProvider = Provider<HistoryDataSource>((ref) {
@@ -54,6 +60,16 @@ final alertsDataSourceProvider = Provider<AlertsDataSource>((ref) {
 final geofencesDataSourceProvider = Provider<GeofencesDataSource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return RemoteGeofencesDataSource(apiClient);
+});
+
+final poiDataSourceProvider = Provider<POIDataSource>((ref) {
+  final apiClient = ref.watch(apiClientProvider);
+  return RemotePOIDataSource(apiClient);
+});
+
+final tasksDataSourceProvider = Provider<TasksDataSource>((ref) {
+  final apiClient = ref.watch(apiClientProvider);
+  return RemoteTasksDataSource(apiClient);
 });
 
 // ==================== Repository Providers ====================
@@ -84,4 +100,9 @@ final alertsRepositoryProvider = Provider<AlertsRepository>((ref) {
 final geofencesRepositoryProvider = Provider<GeofencesRepository>((ref) {
   final dataSource = ref.watch(geofencesDataSourceProvider);
   return GeofencesRepositoryImpl(dataSource);
+});
+
+final poiRepositoryProvider = Provider<POIRepository>((ref) {
+  final dataSource = ref.watch(poiDataSourceProvider);
+  return POIRepositoryImpl(dataSource);
 });

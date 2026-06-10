@@ -17,7 +17,7 @@ class _POIFormScreenState extends State<POIFormScreen> {
   LatLng? _selectedPosition;
   GoogleMapController? _mapController;
   final TextEditingController _nameController = TextEditingController();
-
+  bool _isSaving = false;
   @override
   void initState() {
     super.initState();
@@ -25,6 +25,12 @@ class _POIFormScreenState extends State<POIFormScreen> {
       _selectedPosition = widget.poi!.position;
       _nameController.text = widget.poi!.name;
     }
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
   }
 
   @override
@@ -38,7 +44,7 @@ class _POIFormScreenState extends State<POIFormScreen> {
               zoom: 12,
             ),
             onMapCreated: (controller) => _mapController = controller,
-            onTap: (latLng) {
+            onTap: _isSaving ? null : (latLng) {
               setState(() {
                 _selectedPosition = latLng;
               });
@@ -64,19 +70,23 @@ class _POIFormScreenState extends State<POIFormScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildCircleButton(icon: Icons.save, onTap: _savePOI),
+                _isSaving
+                    ? _buildCircleLoading()
+                    : _buildCircleButton(icon: Icons.save, onTap: _savePOI),
                 Row(
                   children: [
-                    if (widget.poi != null)
+                    if (widget.poi != null && !_isSaving)
                       _buildCircleButton(
                         icon: Icons.delete_outline,
                         onTap: _confirmDelete,
                         color: Colors.red,
                       ),
-                    _buildCircleButton(
-                      icon: Icons.close,
-                      onTap: () => Navigator.pop(context),
-                    ),
+                    if (widget.poi != null && !_isSaving) const SizedBox(width: 8),
+                    if (!_isSaving)
+                      _buildCircleButton(
+                        icon: Icons.close,
+                        onTap: () => Navigator.pop(context),
+                      ),
                   ],
                 ),
               ],
@@ -119,6 +129,7 @@ class _POIFormScreenState extends State<POIFormScreen> {
                   TextField(
                     controller: _nameController,
                     textAlign: TextAlign.right,
+                    enabled: !_isSaving,
                     decoration: const InputDecoration(
                       hintText: 'اسم الموقع المهم',
                       border: UnderlineInputBorder(),
@@ -173,6 +184,28 @@ class _POIFormScreenState extends State<POIFormScreen> {
     );
   }
 
+  Widget _buildCircleLoading() {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: const SizedBox(
+        width: 24,
+        height: 24,
+        child: CircularProgressIndicator(strokeWidth: 2),
+      ),
+    );
+  }
+
   void _confirmDelete() {
     showDialog(
       context: context,
@@ -188,11 +221,22 @@ class _POIFormScreenState extends State<POIFormScreen> {
             child: const Text('إلغاء'),
           ),
           TextButton(
-            onPressed: () {
-              final container = ProviderScope.containerOf(context);
-              container.read(poiProvider.notifier).removePOI(widget.poi!.id);
+            onPressed: () async {
               Navigator.of(context).pop(); // Close dialog
-              Navigator.of(context).pop(); // Close form
+              setState(() => _isSaving = true);
+              try {
+                final container = ProviderScope.containerOf(context);
+                await container.read(poiProvider.notifier).removePOI(widget.poi!.id);
+                if (mounted) {
+                  Navigator.of(context).pop(); // Close form
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تم الحذف بنجاح'), backgroundColor: Colors.green));
+                }
+              } catch (e) {
+                if (mounted) {
+                  setState(() => _isSaving = false);
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('فشل الحذف: $e'), backgroundColor: Colors.red));
+                }
+              }
             },
             child: const Text('حذف', style: TextStyle(color: Colors.red)),
           ),
@@ -201,28 +245,44 @@ class _POIFormScreenState extends State<POIFormScreen> {
     );
   }
 
-  void _savePOI() {
+  Future<void> _savePOI() async {
     if (_nameController.text.isEmpty || _selectedPosition == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('الرجاء إدخال الاسم وتحديد الموقع')),
+        const SnackBar(content: Text('الرجاء إدخال الاسم وتحديد الموقع'), backgroundColor: Colors.red),
       );
       return;
     }
 
-    final container = ProviderScope.containerOf(context);
-    final newPOI = POIEntity(
-      id: widget.poi?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
-      name: _nameController.text,
-      position: _selectedPosition!,
-      createdAt: widget.poi?.createdAt ?? DateTime.now(),
-    );
+    setState(() => _isSaving = true);
 
-    if (widget.poi == null) {
-      container.read(poiProvider.notifier).addPOI(newPOI);
-    } else {
-      container.read(poiProvider.notifier).updatePOI(newPOI);
+    try {
+      final container = ProviderScope.containerOf(context);
+      final newPOI = POIEntity(
+        id: widget.poi?.id ?? '0',
+        name: _nameController.text,
+        position: _selectedPosition!,
+        createdAt: widget.poi?.createdAt ?? DateTime.now(),
+      );
+
+      if (widget.poi == null) {
+        await container.read(poiProvider.notifier).addPOI(newPOI);
+      } else {
+        await container.read(poiProvider.notifier).updatePOI(newPOI);
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('تم الحفظ بنجاح'), backgroundColor: Colors.green),
+        );
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isSaving = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('فشل الحفظ: $e'), backgroundColor: Colors.red),
+        );
+      }
     }
-
-    Navigator.pop(context);
   }
 }

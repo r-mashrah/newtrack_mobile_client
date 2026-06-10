@@ -123,63 +123,26 @@ class MapUtilitiesNotifier extends StateNotifier<MapUtilitiesState> {
     state = state.copyWith(error: error);
   }
 
-  /// تحميل نقاط الاهتمام (محاكاة)
+  /// تحميل نقاط الاهتمام من السيرفر
+  /// يتم استدعاؤها عند الحاجة وتعبئتها من البيانات الحقيقية
   void loadPointsOfInterest() {
-    final mockPois = [
-      const PointOfInterest(
-        id: 'poi_1',
-        name: 'محطة الوقود',
-        location: LatLng(15.3694, 44.1910),
-        type: 'gas_station',
-        description: 'محطة وقود رئيسية',
-      ),
-      const PointOfInterest(
-        id: 'poi_2',
-        name: 'مستشفى',
-        location: LatLng(15.3750, 44.1950),
-        type: 'hospital',
-        description: 'مستشفى عام',
-      ),
-      const PointOfInterest(
-        id: 'poi_3',
-        name: 'مطعم',
-        location: LatLng(15.3650, 44.1850),
-        type: 'restaurant',
-        description: 'مطعم تقليدي',
-      ),
-    ];
-    state = state.copyWith(pointsOfInterest: mockPois);
+    // ستتم تعبئتها من البيانات الحقيقية عبر GeofencesRepository
+    // أو يدوياً من المستخدم
   }
 
-  /// تحميل الأسوار الجغرافية (محاكاة)
+  /// تحميل الأسوار الجغرافية من السيرفر
   void loadGeofences() {
-    final mockGeofences = [
-      Geofence(
-        id: 'gf_1',
-        name: 'منطقة المستودع',
-        points: [
-          const LatLng(15.3600, 44.1800),
-          const LatLng(15.3700, 44.1800),
-          const LatLng(15.3700, 44.1900),
-          const LatLng(15.3600, 44.1900),
-        ],
-        color: Colors.blue.withOpacity(0.3),
-        description: 'منطقة المستودع الرئيسية',
-      ),
-      Geofence(
-        id: 'gf_2',
-        name: 'منطقة الخدمة',
-        points: [
-          const LatLng(15.3750, 44.1950),
-          const LatLng(15.3850, 44.1950),
-          const LatLng(15.3850, 44.2050),
-          const LatLng(15.3750, 44.2050),
-        ],
-        color: Colors.green.withOpacity(0.3),
-        description: 'منطقة الخدمة الرئيسية',
-      ),
-    ];
-    state = state.copyWith(geofences: mockGeofences);
+    // ستتم تعبئتها من البيانات الحقيقية عبر GeofencesRepository
+  }
+
+  /// تعيين نقاط الاهتمام من بيانات حقيقية
+  void setPointsOfInterest(List<PointOfInterest> pois) {
+    state = state.copyWith(pointsOfInterest: pois);
+  }
+
+  /// تعيين الأسوار الجغرافية من بيانات حقيقية
+  void setGeofences(List<Geofence> geoList) {
+    state = state.copyWith(geofences: geoList);
   }
 }
 

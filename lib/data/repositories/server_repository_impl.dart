@@ -1,6 +1,6 @@
 import '../../domain/entities/server_entity.dart';
 import '../../domain/repositories/server_repository.dart';
-import '../datasources/mock_server_datasource.dart';
+import '../datasources/server_datasource.dart';
 
 class ServerRepositoryImpl implements ServerRepository {
   final ServerDataSource _dataSource;

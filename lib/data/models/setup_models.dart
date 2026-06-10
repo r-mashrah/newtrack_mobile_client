@@ -1,3 +1,5 @@
+import 'command_models.dart';
+
 class UserSettings {
   final String distanceUnit;
   final String capacityUnit;
@@ -114,6 +116,49 @@ class SmsGatewaySettings {
       gatewayType: gatewayType ?? this.gatewayType,
       url: url ?? this.url,
       apiKey: apiKey ?? this.apiKey,
+    );
+  }
+}
+
+/// نتيجة إرسال أمر (GPRS أو SMS)
+class CommandResult {
+  final bool success;
+  final String message;
+  final String? errorCode;
+  final Map<String, dynamic>? rawResponse;
+  final CommandDiagnostic? diagnostic;
+
+  const CommandResult({
+    required this.success,
+    required this.message,
+    this.errorCode,
+    this.rawResponse,
+    this.diagnostic,
+  });
+
+  factory CommandResult.success({
+    String message = 'تم إرسال الأمر بنجاح',
+    CommandDiagnostic? diagnostic,
+  }) {
+    return CommandResult(
+      success: true,
+      message: message,
+      diagnostic: diagnostic,
+    );
+  }
+
+  factory CommandResult.failure({
+    required String message,
+    String? errorCode,
+    Map<String, dynamic>? rawResponse,
+    CommandDiagnostic? diagnostic,
+  }) {
+    return CommandResult(
+      success: false,
+      message: message,
+      errorCode: errorCode,
+      rawResponse: rawResponse,
+      diagnostic: diagnostic,
     );
   }
 }

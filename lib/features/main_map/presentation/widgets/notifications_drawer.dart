@@ -1,54 +1,118 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import '../../../../core/services/api_client.dart';
+import '../../../../core/constants/api_constants.dart';
+import '../../../../core/providers/api_client_provider.dart';
 
-class NotificationsDrawer extends StatelessWidget {
+/// نموذج الحدث (Event) من السيرفر
+class EventItem {
+  final String id;
+  final String type;
+  final String message;
+  final String deviceName;
+  final DateTime timestamp;
+  final bool isRead;
+
+  EventItem({
+    required this.id,
+    required this.type,
+    required this.message,
+    required this.deviceName,
+    required this.timestamp,
+    this.isRead = false,
+  });
+
+  factory EventItem.fromGpswoxJson(Map<String, dynamic> json) {
+    return EventItem(
+      id: json['id']?.toString() ?? '',
+      type: json['type']?.toString() ?? json['alert_type']?.toString() ?? 'info',
+      message: json['message']?.toString() ?? json['description']?.toString() ?? '',
+      deviceName: json['device_name']?.toString() ?? json['name']?.toString() ?? '',
+      timestamp: DateTime.tryParse(json['time']?.toString() ?? json['created_at']?.toString() ?? '') ?? DateTime.now(),
+    );
+  }
+}
+
+/// مزود للأحداث (Events) - يجلبها من السيرفر الحقيقي
+class EventsNotifier extends StateNotifier<AsyncValue<List<EventItem>>> {
+  final ApiClient _apiClient;
+
+  EventsNotifier(this._apiClient) : super(const AsyncValue.loading()) {
+    loadEvents();
+  }
+
+  Future<void> loadEvents() async {
+    state = const AsyncValue.loading();
+    try {
+      final response = await _apiClient.get(
+        ApiConstants.getEvents,
+        queryParameters: {'lang': 'ar'},
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final data = response.data;
+        List<dynamic> itemsList = [];
+
+        if (data is List) {
+          itemsList = data;
+        } else if (data is Map) {
+          if (data.containsKey('items')) {
+            final itemsField = data['items'];
+            if (itemsField is List) {
+              itemsList = itemsField;
+            } else if (itemsField is Map && itemsField.containsKey('data')) {
+              final dataField = itemsField['data'];
+              if (dataField is List) {
+                itemsList = dataField;
+              }
+            }
+          } else if (data.containsKey('data')) {
+            final dataField = data['data'];
+            if (dataField is List) {
+              itemsList = dataField;
+            }
+          }
+        }
+
+        final events = itemsList
+            .map((json) {
+              try {
+                return EventItem.fromGpswoxJson(json as Map<String, dynamic>);
+              } catch (e) {
+                return null;
+              }
+            })
+            .whereType<EventItem>()
+            .toList();
+
+        // ترتيب حسب الأحدث أولاً
+        events.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
+        state = AsyncValue.data(events);
+      } else {
+        state = const AsyncValue.data([]);
+      }
+    } catch (e, st) {
+      // إذا لم يكن الـ endpoint موجوداً نعرض قائمة فارغة
+      state = const AsyncValue.data([]);
+    }
+  }
+}
+
+final eventsNotifierProvider = StateNotifierProvider<EventsNotifier, AsyncValue<List<EventItem>>>((ref) {
+  final apiClient = ref.watch(apiClientProvider);
+  return EventsNotifier(apiClient);
+});
+
+/// ============ واجهة درج الإشعارات ============
+
+class NotificationsDrawer extends ConsumerWidget {
   const NotificationsDrawer({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    // بيانات وهمية للإشعارات
-    final notifications = [
-      {
-        'id': '1',
-        'title': 'دخول منطقة محظورة',
-        'message': 'الجهاز Toyota Camry دخل منطقة محظورة في الساعة 2:30 م',
-        'type': 'geofence',
-        'timestamp': DateTime.now().subtract(const Duration(minutes: 5)),
-        'isRead': false,
-      },
-      {
-        'id': '2',
-        'title': 'تجاوز السرعة',
-        'message': 'الجهاز Honda Civic تجاوز السرعة المحددة (120 كم/س)',
-        'type': 'overspeed',
-        'timestamp': DateTime.now().subtract(const Duration(minutes: 15)),
-        'isRead': false,
-      },
-      {
-        'id': '3',
-        'title': 'انقطاع الاتصال',
-        'message': 'فقدنا الاتصال بالجهاز Ford Ranger منذ 30 دقيقة',
-        'type': 'offline',
-        'timestamp': DateTime.now().subtract(const Duration(minutes: 30)),
-        'isRead': true,
-      },
-      {
-        'id': '4',
-        'title': 'تشغيل المحرك',
-        'message': 'تم تشغيل محرك Nissan Patrol',
-        'type': 'ignition',
-        'timestamp': DateTime.now().subtract(const Duration(hours: 1)),
-        'isRead': true,
-      },
-      {
-        'id': '5',
-        'title': 'انخفاض البطارية',
-        'message': 'بطارية Hyundai Elantra منخفضة (20%)',
-        'type': 'battery',
-        'timestamp': DateTime.now().subtract(const Duration(hours: 2)),
-        'isRead': true,
-      },
-    ];
+  Widget build(BuildContext context, WidgetRef ref) {
+    final eventsAsync = ref.watch(eventsNotifierProvider);
 
     return Drawer(
       child: Column(
@@ -61,7 +125,6 @@ class NotificationsDrawer extends StatelessWidget {
               left: 16,
               right: 16,
             ),
-            //          color: colorScheme.primary,
             child: Row(
               children: [
                 const Icon(Icons.notifications, color: Colors.white, size: 24),
@@ -69,7 +132,6 @@ class NotificationsDrawer extends StatelessWidget {
                 const Text(
                   'الإشعارات',
                   style: TextStyle(
-                    // color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
@@ -77,46 +139,61 @@ class NotificationsDrawer extends StatelessWidget {
                 const Spacer(),
                 TextButton(
                   onPressed: () {
-                    // مسح جميع الإشعارات
+                    ref.read(eventsNotifierProvider.notifier).loadEvents();
                   },
                   child: const Text(
-                    'مسح الكل',
+                    'تحديث',
                     style: TextStyle(color: Colors.white70),
                   ),
                 ),
               ],
             ),
           ),
-          // عدد الإشعارات غير المقروءة
-          Container(
-            padding: const EdgeInsets.all(16),
-            // color: Colors.grey[100],
-            child: Row(
-              children: [
-                const Icon(Icons.markunread, color: Colors.blue),
-                const SizedBox(width: 8),
-                Text(
-                  '${notifications.where((n) => !(n['isRead'] as bool)).length} إشعارات غير مقروءة',
-                  // style: TextStyle(color: Colors.grey[700]),
-                ),
-              ],
-            ),
-          ),
-          // قائمة الإشعارات
+          // المحتوى
           Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.zero,
-              itemCount: notifications.length,
-              itemBuilder: (context, index) {
-                final notification = notifications[index];
-                return _NotificationItem(
-                  title: notification['title'] as String,
-                  message: notification['message'] as String,
-                  type: notification['type'] as String,
-                  timestamp: notification['timestamp'] as DateTime,
-                  isRead: notification['isRead'] as bool,
-                  onTap: () {
-                    // معالجة النقر على الإشعار
+            child: eventsAsync.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, _) => Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.error_outline, color: Colors.grey[400], size: 48),
+                    const SizedBox(height: 12),
+                    const Text('فشل في تحميل الإشعارات'),
+                    const SizedBox(height: 8),
+                    TextButton(
+                      onPressed: () => ref.read(eventsNotifierProvider.notifier).loadEvents(),
+                      child: const Text('إعادة المحاولة'),
+                    ),
+                  ],
+                ),
+              ),
+              data: (events) {
+                if (events.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.notifications_off_outlined, color: Colors.grey[400], size: 48),
+                        const SizedBox(height: 12),
+                        Text('لا توجد إشعارات', style: TextStyle(color: Colors.grey[600])),
+                      ],
+                    ),
+                  );
+                }
+                return ListView.builder(
+                  padding: EdgeInsets.zero,
+                  itemCount: events.length,
+                  itemBuilder: (context, index) {
+                    final event = events[index];
+                    return _NotificationItem(
+                      title: event.deviceName.isNotEmpty ? event.deviceName : event.type,
+                      message: event.message,
+                      type: event.type,
+                      timestamp: event.timestamp,
+                      isRead: event.isRead,
+                      onTap: () {},
+                    );
                   },
                 );
               },
@@ -222,37 +299,25 @@ class _NotificationItem extends StatelessWidget {
   }
 
   Color _getTypeColor(String type) {
-    switch (type) {
-      case 'geofence':
-        return Colors.purple;
-      case 'overspeed':
-        return Colors.red;
-      case 'offline':
-        return Colors.grey;
-      case 'ignition':
-        return Colors.green;
-      case 'battery':
-        return Colors.orange;
-      default:
-        return Colors.blue;
-    }
+    final t = type.toLowerCase();
+    if (t.contains('geofence') || t.contains('zone')) return Colors.purple;
+    if (t.contains('speed') || t.contains('overspeed')) return Colors.red;
+    if (t.contains('offline') || t.contains('connection')) return Colors.grey;
+    if (t.contains('ignition') || t.contains('engine')) return Colors.green;
+    if (t.contains('battery') || t.contains('power')) return Colors.orange;
+    if (t.contains('sos') || t.contains('alarm')) return Colors.red;
+    return Colors.blue;
   }
 
   IconData _getTypeIcon(String type) {
-    switch (type) {
-      case 'geofence':
-        return Icons.map;
-      case 'overspeed':
-        return Icons.speed;
-      case 'offline':
-        return Icons.signal_wifi_off;
-      case 'ignition':
-        return Icons.power_settings_new;
-      case 'battery':
-        return Icons.battery_alert;
-      default:
-        return Icons.notifications;
-    }
+    final t = type.toLowerCase();
+    if (t.contains('geofence') || t.contains('zone')) return Icons.map;
+    if (t.contains('speed') || t.contains('overspeed')) return Icons.speed;
+    if (t.contains('offline') || t.contains('connection')) return Icons.signal_wifi_off;
+    if (t.contains('ignition') || t.contains('engine')) return Icons.power_settings_new;
+    if (t.contains('battery') || t.contains('power')) return Icons.battery_alert;
+    if (t.contains('sos') || t.contains('alarm')) return Icons.warning;
+    return Icons.notifications;
   }
 
   String _formatTime(DateTime time) {

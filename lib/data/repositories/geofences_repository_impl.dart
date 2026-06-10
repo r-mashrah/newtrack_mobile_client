@@ -11,4 +11,19 @@ class GeofencesRepositoryImpl implements GeofencesRepository {
   Future<List<GeofenceEntity>> getGeofences() async {
     return await _dataSource.getGeofences();
   }
+
+  @override
+  Future<void> addGeofence(GeofenceEntity geofence) async {
+    await _dataSource.addGeofence(geofence);
+  }
+
+  @override
+  Future<void> updateGeofence(GeofenceEntity geofence) async {
+    await _dataSource.updateGeofence(geofence);
+  }
+
+  @override
+  Future<void> deleteGeofence(String id) async {
+    await _dataSource.deleteGeofence(id);
+  }
 }

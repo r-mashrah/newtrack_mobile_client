@@ -18,6 +18,11 @@ _$AlertModelImpl _$$AlertModelImplFromJson(Map<String, dynamic> json) =>
       notificationType: json['notificationType'] as String,
       isActive: json['isActive'] as bool? ?? true,
       commandEnabled: json['commandEnabled'] as bool? ?? false,
+      overspeed: (json['overspeed'] as num?)?.toInt() ?? 0,
+      geofenceIds: (json['geofenceIds'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$$AlertModelImplToJson(_$AlertModelImpl instance) =>
@@ -32,4 +37,6 @@ Map<String, dynamic> _$$AlertModelImplToJson(_$AlertModelImpl instance) =>
       'notificationType': instance.notificationType,
       'isActive': instance.isActive,
       'commandEnabled': instance.commandEnabled,
+      'overspeed': instance.overspeed,
+      'geofenceIds': instance.geofenceIds,
     };

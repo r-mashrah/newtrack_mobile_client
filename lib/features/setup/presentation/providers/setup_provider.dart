@@ -1,12 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../data/datasources/mock_setup_datasource.dart';
+import '../../../../data/datasources/setup_datasource.dart';
+import '../../../../data/datasources/remote_setup_datasource.dart';
 import '../../../../data/models/setup_models.dart';
+import '../../../../data/models/command_models.dart';
+import '../../../../core/providers/api_client_provider.dart';
 
 final setupDataSourceProvider = Provider<SetupDataSource>((ref) {
-  return MockSetupDataSource();
+  final apiClient = ref.watch(apiClientProvider);
+  return RemoteSetupDataSource(apiClient);
 });
 
-final userSettingsProvider = StateNotifierProvider<UserSettingsNotifier, AsyncValue<UserSettings>>((ref) {
+final userSettingsProvider =
+    StateNotifierProvider<UserSettingsNotifier, AsyncValue<UserSettings>>((ref) {
   return UserSettingsNotifier(ref.watch(setupDataSourceProvider));
 });
 
@@ -48,15 +53,28 @@ final eventsProvider = FutureProvider<List<AppEvent>>((ref) async {
   return ref.watch(setupDataSourceProvider).getEvents();
 });
 
+/// Official command metadata from GET /send_command_data
+final sendCommandDataProvider = FutureProvider<SendCommandData>((ref) async {
+  return ref.watch(setupDataSourceProvider).getSendCommandData();
+});
+
 final smsTemplatesProvider = FutureProvider<List<SmsTemplate>>((ref) async {
-  return ref.watch(setupDataSourceProvider).getSmsTemplates();
+  final data = await ref.watch(sendCommandDataProvider.future);
+  return data.smsTemplates;
 });
 
 final gprsTemplatesProvider = FutureProvider<List<SmsTemplate>>((ref) async {
-  return ref.watch(setupDataSourceProvider).getGprsTemplates();
+  final data = await ref.watch(sendCommandDataProvider.future);
+  return data.gprsTemplates;
 });
 
-final smsGatewaySettingsProvider = StateNotifierProvider<SmsGatewayNotifier, AsyncValue<SmsGatewaySettings>>((ref) {
+final commandTypesProvider = FutureProvider<List<CommandTypeOption>>((ref) async {
+  final data = await ref.watch(sendCommandDataProvider.future);
+  return data.commandTypes;
+});
+
+final smsGatewaySettingsProvider =
+    StateNotifierProvider<SmsGatewayNotifier, AsyncValue<SmsGatewaySettings>>((ref) {
   return SmsGatewayNotifier(ref.watch(setupDataSourceProvider));
 });
 
@@ -85,3 +103,73 @@ class SmsGatewayNotifier extends StateNotifier<AsyncValue<SmsGatewaySettings>> {
     }
   }
 }
+
+// ==================== Command Sending Providers ====================
+
+class CommandSendState {
+  final bool isSending;
+  final CommandResult? lastResult;
+
+  const CommandSendState({this.isSending = false, this.lastResult});
+
+  CommandSendState copyWith({bool? isSending, CommandResult? lastResult}) {
+    return CommandSendState(
+      isSending: isSending ?? this.isSending,
+      lastResult: lastResult ?? this.lastResult,
+    );
+  }
+}
+
+class GprsCommandNotifier extends StateNotifier<CommandSendState> {
+  final SetupDataSource _dataSource;
+  GprsCommandNotifier(this._dataSource) : super(const CommandSendState());
+
+  Future<CommandResult> send({
+    required String deviceId,
+    required String commandType,
+    String? message,
+    bool autoSendWhenOnline = false,
+  }) async {
+    state = const CommandSendState(isSending: true);
+    final result = await _dataSource.sendGprsCommand(
+      deviceId: deviceId,
+      commandType: commandType,
+      message: message,
+      autoSendWhenOnline: autoSendWhenOnline,
+    );
+    state = CommandSendState(isSending: false, lastResult: result);
+    return result;
+  }
+
+  void reset() => state = const CommandSendState();
+}
+
+class SmsCommandNotifier extends StateNotifier<CommandSendState> {
+  final SetupDataSource _dataSource;
+  SmsCommandNotifier(this._dataSource) : super(const CommandSendState());
+
+  Future<CommandResult> send({
+    required String deviceId,
+    required String message,
+  }) async {
+    state = const CommandSendState(isSending: true);
+    final result = await _dataSource.sendSmsCommand(
+      deviceId: deviceId,
+      message: message,
+    );
+    state = CommandSendState(isSending: false, lastResult: result);
+    return result;
+  }
+
+  void reset() => state = const CommandSendState();
+}
+
+final gprsCommandProvider =
+    StateNotifierProvider.autoDispose<GprsCommandNotifier, CommandSendState>((ref) {
+  return GprsCommandNotifier(ref.read(setupDataSourceProvider));
+});
+
+final smsCommandProvider =
+    StateNotifierProvider.autoDispose<SmsCommandNotifier, CommandSendState>((ref) {
+  return SmsCommandNotifier(ref.read(setupDataSourceProvider));
+});

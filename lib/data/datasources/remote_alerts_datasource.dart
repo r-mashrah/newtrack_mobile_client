@@ -26,17 +26,28 @@ class RemoteAlertsDataSource implements AlertsDataSource {
         final data = response.data;
         List<dynamic> items = [];
         
-        if (data is List) {
+        if (data is Map) {
+          // GPSWox يرجع { status: 1, items: { alerts: [...] } }
+          if (data.containsKey('items')) {
+            final itemsObj = data['items'];
+            if (itemsObj is Map && itemsObj.containsKey('alerts')) {
+              items = itemsObj['alerts'] as List<dynamic>;
+            } else if (itemsObj is List) {
+              items = itemsObj;
+            }
+          } else if (data.containsKey('alerts')) {
+            final alertsObj = data['alerts'];
+            if (alertsObj is List) items = alertsObj;
+          }
+        } else if (data is List) {
           items = data;
-        } else if (data is Map && data.containsKey('items')) {
-          items = data['items'];
         }
 
         return items.map((json) {
           return AlertModel.fromGpswoxJson(json as Map<String, dynamic>).toEntity();
         }).toList();
       } else {
-        throw Exception('Server error: ${response.statusCode}');
+        return [];
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 404) {
@@ -48,25 +59,169 @@ class RemoteAlertsDataSource implements AlertsDataSource {
 
   @override
   Future<void> addAlert(AlertEntity alert) async {
-    // POST /api/add_alert
-    throw UnimplementedError('Add alert API not mapped yet');
+    try {
+      int zone = 0;
+      if (alert.insideGeofence) zone = 1;
+      else if (alert.outsideGeofence) zone = 2;
+
+      final Map<String, dynamic> body = {
+        'name': alert.name,
+        'type': alert.type,
+        'devices': [int.tryParse(alert.deviceId) ?? alert.deviceId],
+        'zone': zone,
+        'notifications': {
+          'push': {
+            'active': alert.notificationType == 'push' ? 1 : 0
+          }
+        },
+        'active': alert.isActive ? 1 : 0,
+        'schedule': false,
+      };
+
+      if (alert.commandEnabled) {
+        body['command'] = {
+          'active': 1,
+          'type': 'custom' // Replace with appropriate command type if supported
+        };
+      }
+
+      if (alert.type == 'overspeed') {
+        body['overspeed'] = alert.overspeed;
+      } else if (alert.type == 'stop_duration') {
+        body['stop_duration'] = alert.overspeed;
+      } else if (alert.type == 'offline_duration') {
+        body['offline_duration'] = alert.overspeed;
+      } else if (alert.type == 'idle_duration') {
+        body['idle_duration'] = alert.overspeed;
+      } else if (alert.type == 'ignition_duration') {
+        body['ignition_duration'] = alert.overspeed;
+      }
+
+      if (alert.geofenceIds.isNotEmpty) {
+        final gIds = alert.geofenceIds.map((id) => int.tryParse(id) ?? id).toList();
+        if (alert.type.contains('geofence')) {
+          body['geofences'] = gIds;
+        }
+        if (zone > 0) {
+          body['zones'] = gIds;
+        }
+      }
+      
+      final response = await _apiClient.post(
+        ApiConstants.addAlert,
+        data: body,
+      );
+
+      if (response.statusCode != 200 || response.data == null) {
+        throw Exception('Failed to add alert: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      if (e.response?.data != null) {
+        throw Exception('خطأ في السيرفر: ${e.response?.data}');
+      }
+      throw Exception('Network error while adding alert: ${e.message}');
+    }
   }
 
   @override
   Future<void> updateAlert(AlertEntity alert) async {
-    // POST /api/edit_alert
-    throw UnimplementedError('Update alert API not mapped yet');
+    try {
+      int zone = 0;
+      if (alert.insideGeofence) zone = 1;
+      else if (alert.outsideGeofence) zone = 2;
+
+      final Map<String, dynamic> body = {
+        'id': alert.id,
+        'name': alert.name,
+        'type': alert.type,
+        'devices': [int.tryParse(alert.deviceId) ?? alert.deviceId],
+        'zone': zone,
+        'notifications': {
+          'push': {
+            'active': alert.notificationType == 'push' ? 1 : 0
+          }
+        },
+        'active': alert.isActive ? 1 : 0,
+        'schedule': false,
+      };
+
+      if (alert.commandEnabled) {
+        body['command'] = {
+          'active': 1,
+          'type': 'custom'
+        };
+      }
+
+      if (alert.type == 'overspeed') {
+        body['overspeed'] = alert.overspeed;
+      } else if (alert.type == 'stop_duration') {
+        body['stop_duration'] = alert.overspeed;
+      } else if (alert.type == 'offline_duration') {
+        body['offline_duration'] = alert.overspeed;
+      } else if (alert.type == 'idle_duration') {
+        body['idle_duration'] = alert.overspeed;
+      } else if (alert.type == 'ignition_duration') {
+        body['ignition_duration'] = alert.overspeed;
+      }
+
+      if (alert.geofenceIds.isNotEmpty) {
+        final gIds = alert.geofenceIds.map((id) => int.tryParse(id) ?? id).toList();
+        if (alert.type.contains('geofence')) {
+          body['geofences'] = gIds;
+        }
+        if (zone > 0) {
+          body['zones'] = gIds;
+        }
+      }
+
+      final response = await _apiClient.post(
+        ApiConstants.editAlert,
+        data: body,
+      );
+
+      if (response.statusCode != 200 || response.data == null) {
+        throw Exception('Failed to update alert: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      if (e.response?.data != null) {
+        throw Exception('خطأ في السيرفر: ${e.response?.data}');
+      }
+      throw Exception('Network error while updating alert: ${e.message}');
+    }
   }
 
   @override
   Future<void> deleteAlert(String id) async {
-    // POST /api/destroy_alert
-    throw UnimplementedError('Delete alert API not mapped yet');
+    try {
+      final response = await _apiClient.post(
+        ApiConstants.destroyAlert,
+        data: FormData.fromMap({'id': id}),
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to delete alert: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      throw Exception('Network error while deleting alert: ${e.message}');
+    }
   }
 
   @override
   Future<void> toggleAlertStatus(String id, bool isActive) async {
-    // Depends on specific GPSWox implementation
-    throw UnimplementedError('Toggle alert API not mapped yet');
+    try {
+      final response = await _apiClient.post(
+        ApiConstants.editAlert,
+        data: FormData.fromMap({
+          'id': id,
+          'active': isActive ? '1' : '0',
+        }),
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to toggle alert status: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      throw Exception('Network error while toggling alert: ${e.message}');
+    }
   }
 }

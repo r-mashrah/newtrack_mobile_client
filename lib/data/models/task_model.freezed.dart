@@ -334,7 +334,7 @@ class __$$TaskModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$TaskModelImpl implements _TaskModel {
+class _$TaskModelImpl extends _TaskModel {
   const _$TaskModelImpl(
       {required this.id,
       required this.title,
@@ -354,7 +354,8 @@ class _$TaskModelImpl implements _TaskModel {
       required this.deliveryLng,
       required this.deliveryFromDate,
       required this.deliveryToDate,
-      this.status = 'Pending'});
+      this.status = 'Pending'})
+      : super._();
 
   factory _$TaskModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$TaskModelImplFromJson(json);
@@ -487,7 +488,7 @@ class _$TaskModelImpl implements _TaskModel {
   }
 }
 
-abstract class _TaskModel implements TaskModel {
+abstract class _TaskModel extends TaskModel {
   const factory _TaskModel(
       {required final String id,
       required final String title,
@@ -508,6 +509,7 @@ abstract class _TaskModel implements TaskModel {
       required final DateTime deliveryFromDate,
       required final DateTime deliveryToDate,
       final String status}) = _$TaskModelImpl;
+  const _TaskModel._() : super._();
 
   factory _TaskModel.fromJson(Map<String, dynamic> json) =
       _$TaskModelImpl.fromJson;

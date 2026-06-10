@@ -26,6 +26,8 @@ mixin _$AlertEntity {
   String get notificationType => throw _privateConstructorUsedError;
   bool get isActive => throw _privateConstructorUsedError;
   bool get commandEnabled => throw _privateConstructorUsedError;
+  int get overspeed => throw _privateConstructorUsedError;
+  List<String> get geofenceIds => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AlertEntityCopyWith<AlertEntity> get copyWith =>
@@ -48,7 +50,9 @@ abstract class $AlertEntityCopyWith<$Res> {
       bool outsideGeofence,
       String notificationType,
       bool isActive,
-      bool commandEnabled});
+      bool commandEnabled,
+      int overspeed,
+      List<String> geofenceIds});
 }
 
 /// @nodoc
@@ -74,6 +78,8 @@ class _$AlertEntityCopyWithImpl<$Res, $Val extends AlertEntity>
     Object? notificationType = null,
     Object? isActive = null,
     Object? commandEnabled = null,
+    Object? overspeed = null,
+    Object? geofenceIds = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -116,6 +122,14 @@ class _$AlertEntityCopyWithImpl<$Res, $Val extends AlertEntity>
           ? _value.commandEnabled
           : commandEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
+      overspeed: null == overspeed
+          ? _value.overspeed
+          : overspeed // ignore: cast_nullable_to_non_nullable
+              as int,
+      geofenceIds: null == geofenceIds
+          ? _value.geofenceIds
+          : geofenceIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ) as $Val);
   }
 }
@@ -138,7 +152,9 @@ abstract class _$$AlertEntityImplCopyWith<$Res>
       bool outsideGeofence,
       String notificationType,
       bool isActive,
-      bool commandEnabled});
+      bool commandEnabled,
+      int overspeed,
+      List<String> geofenceIds});
 }
 
 /// @nodoc
@@ -162,6 +178,8 @@ class __$$AlertEntityImplCopyWithImpl<$Res>
     Object? notificationType = null,
     Object? isActive = null,
     Object? commandEnabled = null,
+    Object? overspeed = null,
+    Object? geofenceIds = null,
   }) {
     return _then(_$AlertEntityImpl(
       id: null == id
@@ -204,6 +222,14 @@ class __$$AlertEntityImplCopyWithImpl<$Res>
           ? _value.commandEnabled
           : commandEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
+      overspeed: null == overspeed
+          ? _value.overspeed
+          : overspeed // ignore: cast_nullable_to_non_nullable
+              as int,
+      geofenceIds: null == geofenceIds
+          ? _value._geofenceIds
+          : geofenceIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
@@ -221,7 +247,10 @@ class _$AlertEntityImpl implements _AlertEntity {
       this.outsideGeofence = false,
       required this.notificationType,
       this.isActive = true,
-      this.commandEnabled = false});
+      this.commandEnabled = false,
+      this.overspeed = 0,
+      final List<String> geofenceIds = const []})
+      : _geofenceIds = geofenceIds;
 
   @override
   final String id;
@@ -247,10 +276,21 @@ class _$AlertEntityImpl implements _AlertEntity {
   @override
   @JsonKey()
   final bool commandEnabled;
+  @override
+  @JsonKey()
+  final int overspeed;
+  final List<String> _geofenceIds;
+  @override
+  @JsonKey()
+  List<String> get geofenceIds {
+    if (_geofenceIds is EqualUnmodifiableListView) return _geofenceIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_geofenceIds);
+  }
 
   @override
   String toString() {
-    return 'AlertEntity(id: $id, name: $name, deviceId: $deviceId, deviceName: $deviceName, type: $type, insideGeofence: $insideGeofence, outsideGeofence: $outsideGeofence, notificationType: $notificationType, isActive: $isActive, commandEnabled: $commandEnabled)';
+    return 'AlertEntity(id: $id, name: $name, deviceId: $deviceId, deviceName: $deviceName, type: $type, insideGeofence: $insideGeofence, outsideGeofence: $outsideGeofence, notificationType: $notificationType, isActive: $isActive, commandEnabled: $commandEnabled, overspeed: $overspeed, geofenceIds: $geofenceIds)';
   }
 
   @override
@@ -274,7 +314,11 @@ class _$AlertEntityImpl implements _AlertEntity {
             (identical(other.isActive, isActive) ||
                 other.isActive == isActive) &&
             (identical(other.commandEnabled, commandEnabled) ||
-                other.commandEnabled == commandEnabled));
+                other.commandEnabled == commandEnabled) &&
+            (identical(other.overspeed, overspeed) ||
+                other.overspeed == overspeed) &&
+            const DeepCollectionEquality()
+                .equals(other._geofenceIds, _geofenceIds));
   }
 
   @override
@@ -289,7 +333,9 @@ class _$AlertEntityImpl implements _AlertEntity {
       outsideGeofence,
       notificationType,
       isActive,
-      commandEnabled);
+      commandEnabled,
+      overspeed,
+      const DeepCollectionEquality().hash(_geofenceIds));
 
   @JsonKey(ignore: true)
   @override
@@ -309,7 +355,9 @@ abstract class _AlertEntity implements AlertEntity {
       final bool outsideGeofence,
       required final String notificationType,
       final bool isActive,
-      final bool commandEnabled}) = _$AlertEntityImpl;
+      final bool commandEnabled,
+      final int overspeed,
+      final List<String> geofenceIds}) = _$AlertEntityImpl;
 
   @override
   String get id;
@@ -331,6 +379,10 @@ abstract class _AlertEntity implements AlertEntity {
   bool get isActive;
   @override
   bool get commandEnabled;
+  @override
+  int get overspeed;
+  @override
+  List<String> get geofenceIds;
   @override
   @JsonKey(ignore: true)
   _$$AlertEntityImplCopyWith<_$AlertEntityImpl> get copyWith =>

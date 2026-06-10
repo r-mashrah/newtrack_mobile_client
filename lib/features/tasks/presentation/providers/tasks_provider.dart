@@ -1,63 +1,89 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../data/models/task_model.dart';
-import 'package:uuid/uuid.dart';
 
-class TasksNotifier extends StateNotifier<List<TaskModel>> {
-  TasksNotifier() : super(_mockTasks);
+import '../../../../core/providers/repository_providers.dart';
 
-  static final List<TaskModel> _mockTasks = [
-    TaskModel(
-      id: '1',
-      title: 'توصيل شحنة أدوية',
-      deviceId: 'dev1',
-      deviceName: 'Toyota Camry',
-      invoiceNumber: 'INV-001',
-      address: 'صنعاء، شارع الستين',
-      priority: 'High',
-      pickupAddress: 'مستودع الأدوية المركزي',
-      pickupLat: 15.3694,
-      pickupLng: 44.1910,
-      pickupFromDate: DateTime.now(),
-      pickupToDate: DateTime.now().add(const Duration(hours: 2)),
-      deliveryAddress: 'صيدلية الأمل',
-      deliveryLat: 15.3500,
-      deliveryLng: 44.2000,
-      deliveryFromDate: DateTime.now().add(const Duration(hours: 3)),
-      deliveryToDate: DateTime.now().add(const Duration(hours: 5)),
-    ),
-  ];
+class TasksNotifier extends StateNotifier<AsyncValue<List<TaskModel>>> {
+  final Ref _ref;
 
-  void addTask(TaskModel task) {
-    state = [...state, task.copyWith(id: const Uuid().v4())];
+  TasksNotifier(this._ref) : super(const AsyncValue.loading()) {
+    loadTasks();
   }
 
-  void updateTask(TaskModel updatedTask) {
-    state = [
-      for (final task in state)
-        if (task.id == updatedTask.id) updatedTask else task
-    ];
+  Future<void> loadTasks() async {
+    state = const AsyncValue.loading();
+    try {
+      final dataSource = _ref.read(tasksDataSourceProvider);
+      final tasks = await dataSource.getTasks();
+      state = AsyncValue.data(tasks);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
   }
 
-  void deleteTask(String id) {
-    state = state.where((task) => task.id != id).toList();
+  Future<void> addTask(TaskModel task) async {
+    try {
+      final dataSource = _ref.read(tasksDataSourceProvider);
+      await dataSource.addTask(task);
+      // إعادة تحميل القائمة من السيرفر لضمان التزامن
+      await loadTasks();
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      rethrow;
+    }
+  }
+
+  Future<void> updateTask(TaskModel updatedTask) async {
+    try {
+      final dataSource = _ref.read(tasksDataSourceProvider);
+      await dataSource.updateTask(updatedTask);
+      // إعادة تحميل القائمة من السيرفر لضمان التزامن
+      await loadTasks();
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      rethrow;
+    }
+  }
+
+  Future<void> deleteTask(String id) async {
+    // حفظ الحالة السابقة
+    final previousState = state;
+    
+    // حذف محلي فوري
+    state.whenData((tasks) {
+      state = AsyncValue.data(
+        tasks.where((task) => task.id != id).toList(),
+      );
+    });
+
+    // إرسال الحذف للسيرفر
+    try {
+      final dataSource = _ref.read(tasksDataSourceProvider);
+      await dataSource.deleteTask(id);
+    } catch (e) {
+      // إعادة الحالة السابقة في حالة الخطأ
+      state = previousState;
+      rethrow;
+    }
   }
 }
 
-final tasksProvider = StateNotifierProvider<TasksNotifier, List<TaskModel>>((ref) {
-  return TasksNotifier();
+final tasksProvider = StateNotifierProvider<TasksNotifier, AsyncValue<List<TaskModel>>>((ref) {
+  return TasksNotifier(ref);
 });
 
 final taskSearchQueryProvider = StateProvider<String>((ref) => '');
 
-final filteredTasksProvider = Provider<List<TaskModel>>((ref) {
-  final tasks = ref.watch(tasksProvider);
+final filteredTasksProvider = Provider<AsyncValue<List<TaskModel>>>((ref) {
+  final tasksAsync = ref.watch(tasksProvider);
   final query = ref.watch(taskSearchQueryProvider).toLowerCase();
 
-  if (query.isEmpty) return tasks;
-
-  return tasks.where((task) {
-    return task.invoiceNumber.toLowerCase().contains(query) ||
-           task.address.toLowerCase().contains(query) ||
-           task.title.toLowerCase().contains(query);
-  }).toList();
+  return tasksAsync.whenData((tasks) {
+    if (query.isEmpty) return tasks;
+    return tasks.where((task) {
+      return task.invoiceNumber.toLowerCase().contains(query) ||
+             task.address.toLowerCase().contains(query) ||
+             task.title.toLowerCase().contains(query);
+    }).toList();
+  });
 });

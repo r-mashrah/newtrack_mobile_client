@@ -15,6 +15,8 @@ import '../../features/tools/presentation/screens/tools_screen.dart';
 import '../../features/setup/presentation/screens/setup_screen.dart';
 import '../../features/devices/presentation/screens/add_device_screen.dart';
 import '../../features/devices/presentation/screens/device_details_screen.dart';
+import '../../features/groups/presentation/screens/groups_screen.dart';
+import '../../domain/entities/device_entity.dart';
 
 // ==================== مفوض التوجيه ====================
 
@@ -24,9 +26,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     initialLocation: SplashScreen.routeName,
 
     // معالج الأخطاء
-    errorBuilder: (context, state) => ErrorScreen(
-      error: state.error,
-    ),
+    errorBuilder: (context, state) => ErrorScreen(error: state.error),
 
     // المسارات - تم إزالة ShellRoute لإلغاء شريط التنقل السفلي نهائياً
     routes: [
@@ -81,7 +81,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       // إضافة جهاز جديد
       GoRoute(
         path: AddDeviceScreen.routeName,
-        builder: (context, state) => const AddDeviceScreen(),
+        builder: (context, state) {
+          final device = state.extra as DeviceEntity?;
+          return AddDeviceScreen(device: device);
+        },
       ),
 
       // تفاصيل الجهاز
@@ -92,6 +95,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           return DeviceDetailsScreen(deviceId: deviceId);
         },
       ),
+
+      // المجموعات
+      GoRoute(
+        path: GroupsScreen.routeName,
+        builder: (context, state) => const GroupsScreen(),
+      ),
     ],
 
     // معالج التوجيه
@@ -100,10 +109,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final isAuthenticated = authState.isAuthenticated;
 
       // المسارات التي لا تتطلب مصادقة
-      final publicRoutes = [
-        SplashScreen.routeName,
-        LoginScreen.routeName,
-      ];
+      final publicRoutes = [SplashScreen.routeName, LoginScreen.routeName];
 
       // التحقق من حالة المصادقة
       if (!isAuthenticated && !publicRoutes.contains(state.path)) {
@@ -126,12 +132,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
 class RouterRefreshListenable extends ChangeNotifier {
   RouterRefreshListenable(Ref ref) {
-    ref.listen<AuthState>(
-      authNotifierProvider,
-      (previous, next) {
-        notifyListeners();
-      },
-    );
+    ref.listen<AuthState>(authNotifierProvider, (previous, next) {
+      notifyListeners();
+    });
   }
 }
 
@@ -140,10 +143,7 @@ class RouterRefreshListenable extends ChangeNotifier {
 class ErrorScreen extends StatelessWidget {
   final Exception? error;
 
-  const ErrorScreen({
-    super.key,
-    this.error,
-  });
+  const ErrorScreen({super.key, this.error});
 
   @override
   Widget build(BuildContext context) {
@@ -154,10 +154,7 @@ class ErrorScreen extends StatelessWidget {
           children: [
             const Icon(Icons.error, size: 64, color: Colors.red),
             const SizedBox(height: 16),
-            const Text(
-              'حدث خطأ في التوجيه',
-              style: TextStyle(fontSize: 20),
-            ),
+            const Text('حدث خطأ في التوجيه', style: TextStyle(fontSize: 20)),
             const SizedBox(height: 8),
             if (error != null)
               Text(

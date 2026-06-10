@@ -166,4 +166,17 @@ class AppTheme {
         return Colors.grey;
     }
   }
+
+  static IconData getVehicleIcon(String? markerImage) {
+    final marker = markerImage?.toLowerCase() ?? '';
+    if (marker.contains('truck')) return Icons.local_shipping;
+    if (marker.contains('bus')) return Icons.directions_bus;
+    if (marker.contains('motorcycle') || marker.contains('bike')) return Icons.two_wheeler;
+    if (marker.contains('person') || marker.contains('user')) return Icons.person;
+    if (marker.contains('boat') || marker.contains('ship')) return Icons.directions_boat;
+    if (marker.contains('tractor')) return Icons.agriculture;
+    if (marker.contains('plane')) return Icons.flight;
+    return Icons.directions_car;
+  }
 }
+

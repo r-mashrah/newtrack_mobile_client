@@ -19,6 +19,8 @@ class _GeofenceFormScreenState extends State<GeofenceFormScreen> {
   late Color _selectedColor;
   List<LatLng> _points = [];
 
+  bool _isSaving = false;
+
   @override
   void initState() {
     super.initState();
@@ -28,27 +30,39 @@ class _GeofenceFormScreenState extends State<GeofenceFormScreen> {
   }
 
   @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white1,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: _buildHeaderButton(
-          icon: Icons.save,
-          onTap: _saveGeofence,
-        ),
+        leading: _isSaving 
+            ? const Padding(
+                padding: EdgeInsets.all(12.0),
+                child: CircularProgressIndicator(),
+              )
+            : _buildHeaderButton(
+                icon: Icons.save,
+                onTap: _saveGeofence,
+              ),
         actions: [
-          if (widget.geofence != null)
+          if (widget.geofence != null && !_isSaving)
             _buildHeaderButton(
               icon: Icons.delete_outline,
               onTap: _confirmDelete,
               color: Colors.red,
             ),
-          _buildHeaderButton(
-            icon: Icons.close,
-            onTap: () => Navigator.pop(context),
-          ),
+          if (!_isSaving)
+            _buildHeaderButton(
+              icon: Icons.close,
+              onTap: () => Navigator.pop(context),
+            ),
           const SizedBox(width: 8),
         ],
       ),
@@ -65,6 +79,7 @@ class _GeofenceFormScreenState extends State<GeofenceFormScreen> {
             TextField(
               controller: _nameController,
               textAlign: TextAlign.right,
+              enabled: !_isSaving,
               decoration: InputDecoration(
                 hintText: 'Yemen',
                 fillColor: AppColors.white,
@@ -136,11 +151,22 @@ class _GeofenceFormScreenState extends State<GeofenceFormScreen> {
             child: const Text('إلغاء'),
           ),
           TextButton(
-            onPressed: () {
-              final container = ProviderScope.containerOf(context);
-              container.read(geofencesProvider.notifier).removeGeofence(widget.geofence!.id);
+            onPressed: () async {
               Navigator.of(context).pop(); // Close dialog
-              Navigator.of(context).pop(); // Close form
+              setState(() => _isSaving = true);
+              try {
+                final container = ProviderScope.containerOf(context);
+                await container.read(geofencesProvider.notifier).removeGeofence(widget.geofence!.id);
+                if (mounted) {
+                   Navigator.of(context).pop(); // Close form
+                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تم الحذف بنجاح'), backgroundColor: Colors.green));
+                }
+              } catch (e) {
+                if (mounted) {
+                  setState(() => _isSaving = false);
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('فشل الحذف: $e'), backgroundColor: Colors.red));
+                }
+              }
             },
             child: const Text('حذف', style: TextStyle(color: Colors.red)),
           ),
@@ -151,7 +177,7 @@ class _GeofenceFormScreenState extends State<GeofenceFormScreen> {
 
   Widget _buildColorPicker() {
     return InkWell(
-      onTap: _showColorPickerDialog,
+      onTap: _isSaving ? null : _showColorPickerDialog,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
@@ -184,7 +210,7 @@ class _GeofenceFormScreenState extends State<GeofenceFormScreen> {
 
   Widget _buildMapSection() {
     return InkWell(
-      onTap: () async {
+      onTap: _isSaving ? null : () async {
         final result = await Navigator.push<List<LatLng>>(
           context,
           MaterialPageRoute(
@@ -286,35 +312,51 @@ class _GeofenceFormScreenState extends State<GeofenceFormScreen> {
     );
   }
 
-  void _saveGeofence() {
+  Future<void> _saveGeofence() async {
     if (_nameController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('الرجاء إدخال اسم الحدود')),
+        const SnackBar(content: Text('الرجاء إدخال اسم الحدود'), backgroundColor: Colors.red),
       );
       return;
     }
     if (_points.length < 3) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('يجب رسم 3 نقاط على الأقل لتكوين شكل هندسي')),
+        const SnackBar(content: Text('يجب رسم 3 نقاط على الأقل لتكوين شكل هندسي'), backgroundColor: Colors.red),
       );
       return;
     }
 
-    final container = ProviderScope.containerOf(context);
-    final newGeofence = GeofenceEntity(
-      id: widget.geofence?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
-      name: _nameController.text,
-      points: _points,
-      color: _selectedColor,
-      createdAt: widget.geofence?.createdAt ?? DateTime.now(),
-    );
+    setState(() => _isSaving = true);
 
-    if (widget.geofence == null) {
-      container.read(geofencesProvider.notifier).addGeofence(newGeofence);
-    } else {
-      container.read(geofencesProvider.notifier).updateGeofence(newGeofence);
+    try {
+      final container = ProviderScope.containerOf(context);
+      final newGeofence = GeofenceEntity(
+        id: widget.geofence?.id ?? '0',
+        name: _nameController.text,
+        points: _points,
+        color: _selectedColor,
+        createdAt: widget.geofence?.createdAt ?? DateTime.now(),
+      );
+
+      if (widget.geofence == null) {
+        await container.read(geofencesProvider.notifier).addGeofence(newGeofence);
+      } else {
+        await container.read(geofencesProvider.notifier).updateGeofence(newGeofence);
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('تم الحفظ بنجاح'), backgroundColor: Colors.green),
+        );
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isSaving = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('فشل الحفظ: $e'), backgroundColor: Colors.red),
+        );
+      }
     }
-
-    Navigator.pop(context);
   }
 }

@@ -15,5 +15,7 @@ class AlertEntity with _$AlertEntity {
     required String notificationType,
     @Default(true) bool isActive,
     @Default(false) bool commandEnabled,
+    @Default(0) int overspeed,
+    @Default([]) List<String> geofenceIds,
   }) = _AlertEntity;
 }

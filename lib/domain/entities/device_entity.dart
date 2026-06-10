@@ -40,16 +40,10 @@ class DeviceEntity with _$DeviceEntity {
   const DeviceEntity._();
 
   bool get isOnline {
-    if (lastUpdate == null) return false;
-    final now = DateTime.now();
-    final difference = now.difference(lastUpdate!);
-    return difference.inMinutes <= 5;
+    return status != 'offline';
   }
 
   String get displayStatus {
-    if (!isOnline) return 'offline';
-    if (speed != null && speed! > 5) return 'moving';
-    if (speed != null && speed! <= 5) return 'stopped';
-    return 'parked';
+    return status;
   }
 }

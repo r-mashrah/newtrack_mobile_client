@@ -38,6 +38,7 @@ class POIEntity {
   final String name;
   final LatLng position;
   final String? description;
+  final String? icon;
   final DateTime createdAt;
 
   POIEntity({
@@ -45,6 +46,7 @@ class POIEntity {
     required this.name,
     required this.position,
     this.description,
+    this.icon,
     required this.createdAt,
   });
 
@@ -53,6 +55,7 @@ class POIEntity {
     String? name,
     LatLng? position,
     String? description,
+    String? icon,
     DateTime? createdAt,
   }) {
     return POIEntity(
@@ -60,6 +63,7 @@ class POIEntity {
       name: name ?? this.name,
       position: position ?? this.position,
       description: description ?? this.description,
+      icon: icon ?? this.icon,
       createdAt: createdAt ?? this.createdAt,
     );
   }

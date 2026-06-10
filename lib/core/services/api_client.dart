@@ -84,4 +84,34 @@ class ApiClient {
       options: options,
     );
   }
+
+  // Basic HTTP PUT
+  Future<Response> put(
+    String path, {
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+  }) async {
+    return await _dio.put(
+      path,
+      data: data,
+      queryParameters: _appendHash(queryParameters),
+      options: options,
+    );
+  }
+
+  // Basic HTTP DELETE
+  Future<Response> delete(
+    String path, {
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+  }) async {
+    return await _dio.delete(
+      path,
+      data: data,
+      queryParameters: _appendHash(queryParameters),
+      options: options,
+    );
+  }
 }

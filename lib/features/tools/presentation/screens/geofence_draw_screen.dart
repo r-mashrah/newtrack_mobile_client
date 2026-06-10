@@ -5,7 +5,11 @@ import '../../../../core/theme/app_theme.dart';
 class GeofenceDrawScreen extends StatefulWidget {
   final List<LatLng> initialPoints;
   final Color color;
-  const GeofenceDrawScreen({super.key, required this.initialPoints, required this.color});
+  const GeofenceDrawScreen({
+    super.key,
+    required this.initialPoints,
+    required this.color,
+  });
 
   @override
   State<GeofenceDrawScreen> createState() => _GeofenceDrawScreenState();
@@ -32,7 +36,9 @@ class _GeofenceDrawScreenState extends State<GeofenceDrawScreen> {
           markerId: MarkerId('point_$i'),
           position: _points[i],
           draggable: true,
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+          icon: BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueGreen,
+          ),
           onDragEnd: (newPosition) {
             setState(() {
               _points[i] = newPosition;
@@ -64,7 +70,9 @@ class _GeofenceDrawScreenState extends State<GeofenceDrawScreen> {
         children: [
           GoogleMap(
             initialCameraPosition: CameraPosition(
-              target: _points.isNotEmpty ? _points.first : const LatLng(15.3694, 44.1910),
+              target: _points.isNotEmpty
+                  ? _points.first
+                  : const LatLng(15.3694, 44.1910),
               zoom: 10,
             ),
             onMapCreated: (controller) => _mapController = controller,
@@ -92,7 +100,9 @@ class _GeofenceDrawScreenState extends State<GeofenceDrawScreen> {
                   onTap: () {
                     if (_points.length < 3) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('يجب رسم 3 نقاط على الأقل')),
+                        const SnackBar(
+                          content: Text('يجب رسم 3 نقاط على الأقل'),
+                        ),
                       );
                     } else {
                       Navigator.pop(context, _points);
@@ -126,12 +136,14 @@ class _GeofenceDrawScreenState extends State<GeofenceDrawScreen> {
                 const SizedBox(height: 12),
                 _buildCircleButton(
                   icon: Icons.add,
-                  onTap: () => _mapController?.animateCamera(CameraUpdate.zoomIn()),
+                  onTap: () =>
+                      _mapController?.animateCamera(CameraUpdate.zoomIn()),
                 ),
                 const SizedBox(height: 12),
                 _buildCircleButton(
                   icon: Icons.remove,
-                  onTap: () => _mapController?.animateCamera(CameraUpdate.zoomOut()),
+                  onTap: () =>
+                      _mapController?.animateCamera(CameraUpdate.zoomOut()),
                 ),
               ],
             ),
@@ -154,9 +166,9 @@ class _GeofenceDrawScreenState extends State<GeofenceDrawScreen> {
                 ],
               ),
               child: Text(
-                _points.length < 3 
-                  ? 'اضغط على الخريطة لرسم النقاط (تحتاج ${3 - _points.length} إضافية)'
-                  : 'يمكنك الآن حفظ الحدود الجغرافية',
+                _points.length < 3
+                    ? 'اضغط على الخريطة لرسم النقاط (تحتاج ${3 - _points.length} إضافية)'
+                    : 'يمكنك الآن حفظ الحدود الجغرافية',
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontWeight: FontWeight.w500),
               ),
@@ -167,7 +179,10 @@ class _GeofenceDrawScreenState extends State<GeofenceDrawScreen> {
     );
   }
 
-  Widget _buildCircleButton({required IconData icon, required VoidCallback onTap}) {
+  Widget _buildCircleButton({
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,

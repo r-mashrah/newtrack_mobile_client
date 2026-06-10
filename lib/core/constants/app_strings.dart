@@ -18,14 +18,7 @@ class AppStrings {
   static const String demoServer = 'العرض التوضيحي';
   static const String developmentServer = 'التطوير';
 
-  // أسماء الأجهزة الوهمية
-  static const List<String> mockDeviceNames = [
-    'Toyota Camry - صالح',
-    'Honda Civic - أحمد',
-    'Ford Ranger - محمد',
-    'Nissan Patrol - خالد',
-    'Hyundai Elantra - يوسف',
-  ];
+
 
   // حالات الأجهزة
   static const String statusOnline = 'متصل';

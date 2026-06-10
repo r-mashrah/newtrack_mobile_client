@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../data/models/task_model.dart';
+import '../../../main_map/presentation/providers/devices_provider.dart';
 import '../providers/tasks_provider.dart';
 import '../widgets/location_picker_widget.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -21,8 +22,10 @@ class _AddEditTaskScreenState extends ConsumerState<AddEditTaskScreen> {
   late TextEditingController _invoiceController;
   late TextEditingController _commentController;
   
-  String? _selectedDeviceId;
+  String? _selectedDeviceId; // الآن يحتفظ بـ ID الجهاز الحقيقي
+  String? _selectedDeviceName;
   String _priority = 'Medium';
+  bool _isSaving = false;
   
   String _pickupAddress = '(مطلوب)';
   LatLng? _pickupLocation;
@@ -34,7 +37,6 @@ class _AddEditTaskScreenState extends ConsumerState<AddEditTaskScreen> {
   DateTime _deliveryFrom = DateTime.now().add(const Duration(hours: 3));
   DateTime _deliveryTo = DateTime.now().add(const Duration(hours: 5));
 
-  final List<String> _devices = ['Toyota Camry', 'Mercedes Actros', 'Volvo FH16'];
   final List<String> _priorities = ['Low', 'Medium', 'High'];
 
   @override
@@ -44,7 +46,8 @@ class _AddEditTaskScreenState extends ConsumerState<AddEditTaskScreen> {
     _invoiceController = TextEditingController(text: widget.task?.invoiceNumber ?? '');
     _commentController = TextEditingController(text: widget.task?.comment ?? '');
     if (widget.task != null) {
-      _selectedDeviceId = widget.task!.deviceName;
+      _selectedDeviceId = widget.task!.deviceId;
+      _selectedDeviceName = widget.task!.deviceName;
       _priority = widget.task!.priority;
       _pickupAddress = widget.task!.pickupAddress;
       _pickupLocation = LatLng(widget.task!.pickupLat, widget.task!.pickupLng);
@@ -67,14 +70,22 @@ class _AddEditTaskScreenState extends ConsumerState<AddEditTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final devicesState = ref.watch(devicesNotifierProvider);
+
     return Scaffold(
       backgroundColor: AppColors.white1,
       appBar: AppBar(
         backgroundColor: AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.save, color: AppColors.primary),
-          onPressed: _saveTask,
+          icon: _isSaving
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Icon(Icons.save, color: AppColors.primary),
+          onPressed: _isSaving ? null : _saveTask,
         ),
         actions: [
           IconButton(
@@ -95,7 +106,64 @@ class _AddEditTaskScreenState extends ConsumerState<AddEditTaskScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildSectionHeader('الإعدادات الرئيسية'),
-              _buildDropdownField('الجهاز', _selectedDeviceId, _devices, (val) => setState(() => _selectedDeviceId = val)),
+
+              // قائمة الأجهزة الحقيقية
+              devicesState.when(
+                initial: () => const Center(child: Text('جاري التحميل...')),
+                loading: () => Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: const Center(child: CircularProgressIndicator()),
+                ),
+                loaded: (devices, isRefreshing, filterQuery, statusFilter) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.chevron_right, color: AppColors.primary),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: _selectedDeviceId,
+                              hint: const Text('(مطلوب) الجهاز'),
+                              items: devices.map((device) {
+                                return DropdownMenuItem<String>(
+                                  value: device.id,
+                                  child: Text(device.name),
+                                );
+                              }).toList(),
+                              onChanged: (val) {
+                                setState(() {
+                                  _selectedDeviceId = val;
+                                  _selectedDeviceName = devices
+                                      .firstWhere((d) => d.id == val)
+                                      .name;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                        const Text('الجهاز', style: TextStyle(color: Colors.grey)),
+                      ],
+                    ),
+                  );
+                },
+                error: (message, previousDevices) => Text(
+                  'خطأ في تحميل الأجهزة: $message',
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ),
+
               const SizedBox(height: 16),
               TextFormField(
                 controller: _titleController,
@@ -113,7 +181,7 @@ class _AddEditTaskScreenState extends ConsumerState<AddEditTaskScreen> {
                 decoration: const InputDecoration(hintText: 'Comment', border: UnderlineInputBorder()),
               ),
               const SizedBox(height: 16),
-              _buildDropdownField('أفضلية', _priority, _priorities, (val) => setState(() => _priority = val!)),
+              _buildPriorityDropdown(),
               
               const SizedBox(height: 24),
               _buildSectionHeader('الاستلام'),
@@ -140,7 +208,7 @@ class _AddEditTaskScreenState extends ConsumerState<AddEditTaskScreen> {
     );
   }
 
-  Widget _buildDropdownField(String label, String? value, List<String> items, ValueChanged<String?> onChanged) {
+  Widget _buildPriorityDropdown() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.grey.shade300)),
@@ -151,14 +219,14 @@ class _AddEditTaskScreenState extends ConsumerState<AddEditTaskScreen> {
           Expanded(
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
-                value: value,
-                hint: Text('(مطلوب) $label'),
-                items: items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                onChanged: onChanged,
+                value: _priority,
+                hint: const Text('(مطلوب) أفضلية'),
+                items: _priorities.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                onChanged: (val) => setState(() => _priority = val!),
               ),
             ),
           ),
-          Text(label, style: const TextStyle(color: Colors.grey)),
+          const Text('أفضلية', style: TextStyle(color: Colors.grey)),
         ],
       ),
     );
@@ -219,10 +287,10 @@ class _AddEditTaskScreenState extends ConsumerState<AddEditTaskScreen> {
             setState(() {
               if (isPickup) {
                 _pickupLocation = pos;
-                _pickupAddress = addr; // سيتم عرض العنوان النصي فقط للمستخدم
+                _pickupAddress = addr;
               } else {
                 _deliveryLocation = pos;
-                _deliveryAddress = addr; // سيتم عرض العنوان النصي فقط للمستخدم
+                _deliveryAddress = addr;
               }
             });
           },
@@ -231,13 +299,25 @@ class _AddEditTaskScreenState extends ConsumerState<AddEditTaskScreen> {
     );
   }
 
-  void _saveTask() {
+  void _saveTask() async {
     if (_formKey.currentState!.validate()) {
+      if (_selectedDeviceId == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('يرجى اختيار جهاز'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+
+      setState(() => _isSaving = true);
+
       final newTask = TaskModel(
         id: widget.task?.id ?? '',
         title: _titleController.text,
-        deviceId: 'dev_id',
-        deviceName: _selectedDeviceId ?? 'Unknown',
+        deviceId: _selectedDeviceId!,
+        deviceName: _selectedDeviceName ?? '',
         invoiceNumber: _invoiceController.text,
         address: _pickupAddress,
         comment: _commentController.text,
@@ -254,12 +334,33 @@ class _AddEditTaskScreenState extends ConsumerState<AddEditTaskScreen> {
         deliveryToDate: _deliveryTo,
       );
 
-      if (widget.task == null) {
-        ref.read(tasksProvider.notifier).addTask(newTask);
-      } else {
-        ref.read(tasksProvider.notifier).updateTask(newTask);
+      try {
+        if (widget.task == null) {
+          await ref.read(tasksProvider.notifier).addTask(newTask);
+        } else {
+          await ref.read(tasksProvider.notifier).updateTask(newTask);
+        }
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(widget.task == null ? 'تم إضافة المهمة بنجاح' : 'تم تحديث المهمة بنجاح'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          Navigator.pop(context);
+        }
+      } catch (e) {
+        if (mounted) {
+          setState(() => _isSaving = false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('فشل في الحفظ: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       }
-      Navigator.pop(context);
     }
   }
 }

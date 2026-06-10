@@ -295,4 +295,543 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deviceDetailsIdleColor => 'Idle Color';
+
+  @override
+  String get devicesTabTitle => 'Devices';
+
+  @override
+  String get searchDeviceHint => 'Search device...';
+
+  @override
+  String get allDevicesFilter => 'All';
+
+  @override
+  String get ungroupedFilter => 'Ungrouped';
+
+  @override
+  String get onlineStatus => 'Online';
+
+  @override
+  String get offlineStatus => 'Offline';
+
+  @override
+  String get noDevicesMatched => 'No devices match the filter';
+
+  @override
+  String get deviceOptionsTitle => 'Device Options';
+
+  @override
+  String get groupsTabTitle => 'Manage Groups';
+
+  @override
+  String get createGroup => 'Create Group';
+
+  @override
+  String get editGroup => 'Edit Group';
+
+  @override
+  String get deleteGroup => 'Delete Group';
+
+  @override
+  String deleteGroupConfirm(Object groupName) {
+    return 'Do you want to delete \"$groupName\"? What should be done with the devices in it?';
+  }
+
+  @override
+  String get moveDevicesToUngrouped => 'Move to Ungrouped';
+
+  @override
+  String get deleteAllDevices => 'Delete All';
+
+  @override
+  String get groupNameLabel => 'Group Name';
+
+  @override
+  String get enterGroupNameHint => 'Enter group name';
+
+  @override
+  String get emptyGroupMessage => 'No devices in this group';
+
+  @override
+  String get saveChangesButton => 'Save Changes';
+
+  @override
+  String get createGroupSuccess => 'Group created successfully';
+
+  @override
+  String get editGroupSuccess => 'Group modified successfully';
+
+  @override
+  String get groupNotSupportedError =>
+      'Sorry, your server does not support creating groups directly from the app. Please create the group from the web control panel.';
+
+  @override
+  String get emptyGroupNameValidation => 'Please enter group name';
+
+  @override
+  String get showOnMap => 'Show on Map';
+
+  @override
+  String get showOnMapSubtitle => 'Show all group devices on the map';
+
+  @override
+  String get editGroupSubtitle => 'Edit name and manage devices';
+
+  @override
+  String addDevicesCount(Object count) {
+    return '$count Devices';
+  }
+
+  @override
+  String get pressToCreateGroup => 'Press + to create a new group';
+
+  @override
+  String get historyTabTitle => 'History';
+
+  @override
+  String get searchVehicleHint => 'Search by vehicle name or number...';
+
+  @override
+  String get viewTripsButton => 'View Trips';
+
+  @override
+  String tripsCount(Object count) {
+    return '$count Trip(s)';
+  }
+
+  @override
+  String get refreshTrips => 'Refresh';
+
+  @override
+  String get loadingTrips => 'Loading trips...';
+
+  @override
+  String get selectVehicleTitle => 'Select Vehicle';
+
+  @override
+  String get selectVehicleSubtitle =>
+      'Select a vehicle from above to view its trips';
+
+  @override
+  String get noTripsTitle => 'No Trips';
+
+  @override
+  String get noTripsSubtitle => 'No trips found in the specified period';
+
+  @override
+  String get removeFilters => 'Remove Filters';
+
+  @override
+  String get noVehiclesMatchedSearch => 'No vehicles match the search';
+
+  @override
+  String get totalLabel => 'Total';
+
+  @override
+  String get movingStatus => 'Moving';
+
+  @override
+  String get tryChangingFilters => 'Try changing search or filter options';
+
+  @override
+  String get checkNetworkConnection => 'Check your network connection';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get idleStatus => 'Idle';
+
+  @override
+  String get noGpsSignal => 'No GPS Signal';
+
+  @override
+  String get mapLabel => 'Map';
+
+  @override
+  String get sendCommand => 'Send Command';
+
+  @override
+  String get sendSmsCommand => 'SMS Command';
+
+  @override
+  String get editDevice => 'Edit Device';
+
+  @override
+  String get unpin => 'Unpin';
+
+  @override
+  String get pinToTop => 'Pin to Top';
+
+  @override
+  String lastConnectionLabel(Object time) {
+    return 'Last connection: $time';
+  }
+
+  @override
+  String get km => 'km';
+
+  @override
+  String get kmh => 'km/h';
+
+  @override
+  String selectedDevicesCount(Object count) {
+    return 'Selected: $count Devices';
+  }
+
+  @override
+  String activeDevicesCount(Object count) {
+    return '| $count Active';
+  }
+
+  @override
+  String get selectAll => 'Select All';
+
+  @override
+  String get clearAll => 'Clear All';
+
+  @override
+  String get searchDevice => 'Search for device...';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get groupsLoadError => 'Error loading groups';
+
+  @override
+  String get noGroupsYet => 'No groups yet';
+
+  @override
+  String get todayPreset => 'Today';
+
+  @override
+  String get yesterdayPreset => 'Yesterday';
+
+  @override
+  String get weekPreset => 'Week';
+
+  @override
+  String get monthPreset => 'Month';
+
+  @override
+  String get customPreset => 'Custom';
+
+  @override
+  String get longTrip => '🛣️ Long';
+
+  @override
+  String get shortTrip => '📍 Short';
+
+  @override
+  String get stops => '🛑 Stops';
+
+  @override
+  String get fastTrip => '⚡ Fast';
+
+  @override
+  String get alerts => '⚠️ Alerts';
+
+  @override
+  String get night => '🌙 Night';
+
+  @override
+  String get distanceLabel => 'Distance';
+
+  @override
+  String get durationLabel => 'Duration';
+
+  @override
+  String get avgSpeedLabel => 'Avg. Speed';
+
+  @override
+  String get maxSpeedLabel => 'Max';
+
+  @override
+  String get overspeed => 'Overspeed';
+
+  @override
+  String get normalTrip => 'Normal';
+
+  @override
+  String stopsCount(Object count) {
+    return '$count Stops';
+  }
+
+  @override
+  String pointsCount(Object count) {
+    return '$count Points';
+  }
+
+  @override
+  String get statsTab => 'Stats';
+
+  @override
+  String get timelineTab => 'Timeline';
+
+  @override
+  String get stopsTab => 'Stops';
+
+  @override
+  String get noGpsPoints => 'No GPS points for this trip';
+
+  @override
+  String get startPoint => 'Start';
+
+  @override
+  String get endPoint => 'End';
+
+  @override
+  String stopIndex(Object index) {
+    return 'Stop $index';
+  }
+
+  @override
+  String get timeTitle => 'Time';
+
+  @override
+  String get altitudeTitle => 'Altitude';
+
+  @override
+  String get meterUnit => 'm';
+
+  @override
+  String get speedLabel => 'Speed';
+
+  @override
+  String get noStopsTitle => 'No stops';
+
+  @override
+  String get noStopsSubtitle => 'The trip was continuous without any stops';
+
+  @override
+  String get noEventsTitle => 'No events';
+
+  @override
+  String get avgSpeedCard => 'Avg. Speed';
+
+  @override
+  String get maxSpeedCard => 'Max Speed';
+
+  @override
+  String get stopsCountCard => 'Stops Count';
+
+  @override
+  String get stopTimeCard => 'Stop Time';
+
+  @override
+  String get movingTimeCard => 'Moving Time';
+
+  @override
+  String get pointsCard => 'GPS Points';
+
+  @override
+  String get movingStopRatio => 'Moving / Stopping Ratio';
+
+  @override
+  String get tripEfficiency => 'Trip Efficiency';
+
+  @override
+  String get efficiencyExcellent => 'Excellent';
+
+  @override
+  String get efficiencyGood => 'Good';
+
+  @override
+  String get efficiencyAverage => 'Average';
+
+  @override
+  String get efficiencyPoor => 'Poor';
+
+  @override
+  String get notAvailable => 'Not available';
+
+  @override
+  String get justNow => 'Just now';
+
+  @override
+  String minutesAgo(Object count) {
+    return '${count}m ago';
+  }
+
+  @override
+  String hoursAgo(Object count) {
+    return '${count}h ago';
+  }
+
+  @override
+  String daysAgo(Object count) {
+    return '${count}d ago';
+  }
+
+  @override
+  String get optionsTab => 'Options';
+
+  @override
+  String get groupsTab => 'Groups';
+
+  @override
+  String get devicesTab => 'Devices';
+
+  @override
+  String quickStatsTotal(Object count) {
+    return 'Total $count';
+  }
+
+  @override
+  String quickStatsOnline(Object count) {
+    return 'Online $count';
+  }
+
+  @override
+  String quickStatsOffline(Object count) {
+    return 'Offline $count';
+  }
+
+  @override
+  String get viewAll => 'View All';
+
+  @override
+  String get noResults => 'No results found';
+
+  @override
+  String get noDevices => 'No devices found';
+
+  @override
+  String get historyLabel => 'History';
+
+  @override
+  String get sendCommandDesc => 'Device control commands';
+
+  @override
+  String get sendSms => 'SMS Command';
+
+  @override
+  String get sendSmsDesc => 'Send command via SMS';
+
+  @override
+  String get editDeviceDesc => 'Change name or settings';
+
+  @override
+  String get deleteDevice => 'Delete Device';
+
+  @override
+  String get deleteDeviceDesc => 'Permanent delete';
+
+  @override
+  String get groupsLoadFailed => 'Failed to load groups';
+
+  @override
+  String get noGroups => 'No groups found';
+
+  @override
+  String get manageGroups => 'Manage Groups';
+
+  @override
+  String get addNewDevice => 'Add New Device';
+
+  @override
+  String get tools => 'Tools';
+
+  @override
+  String get setup => 'Setup';
+
+  @override
+  String get logout => 'Logout';
+
+  @override
+  String get settingsSaved => 'Settings saved successfully';
+
+  @override
+  String get vehiclesTab => 'Vehicles';
+
+  @override
+  String get smsTab => 'SMS';
+
+  @override
+  String get unitsSection => 'Units';
+
+  @override
+  String get distanceMeasure => 'Distance Measurement';
+
+  @override
+  String get distanceUnitTitle => 'Distance Unit';
+
+  @override
+  String get capacityLabel => 'Capacity';
+
+  @override
+  String get capacityUnitTitle => 'Capacity Unit';
+
+  @override
+  String get altitudeLabel => 'Altitude';
+
+  @override
+  String get altitudeUnitTitle => 'Altitude Unit';
+
+  @override
+  String get timeSection => 'Time';
+
+  @override
+  String get weekDays => 'Week Days';
+
+  @override
+  String get startOfWeekTitle => 'Start of Week';
+
+  @override
+  String get timezoneLabel => 'Timezone';
+
+  @override
+  String get daylightSavingLabel => 'Daylight Saving';
+
+  @override
+  String get languageLabel => 'Language';
+
+  @override
+  String get fleetManagement => 'Fleet Management';
+
+  @override
+  String get vehicleGroups => 'Vehicle Groups';
+
+  @override
+  String get driversList => 'Drivers List';
+
+  @override
+  String get driversTitle => 'Drivers';
+
+  @override
+  String get eventsLabel => 'Events';
+
+  @override
+  String get templatesSection => 'Templates';
+
+  @override
+  String get smsTemplates => 'SMS Templates';
+
+  @override
+  String get gprsTemplates => 'GPRS Templates';
+
+  @override
+  String get smsGatewaySection => 'SMS Gateway';
+
+  @override
+  String get enableSms => 'Enable SMS';
+
+  @override
+  String get gatewayTypeLabel => 'Gateway Type';
+
+  @override
+  String get selectLanguageTitle => 'Select Language';
+
+  @override
+  String get noDataAvailable => 'No data available';
+
+  @override
+  String get closeButton => 'Close';
+
+  @override
+  String get fetchingFromServer => 'Fetching from server...';
+
+  @override
+  String get fetching => 'Fetching...';
 }

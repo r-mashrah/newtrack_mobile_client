@@ -661,6 +661,1020 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Idle Color'**
   String get deviceDetailsIdleColor;
+
+  /// No description provided for @devicesTabTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices'**
+  String get devicesTabTitle;
+
+  /// No description provided for @searchDeviceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search device...'**
+  String get searchDeviceHint;
+
+  /// No description provided for @allDevicesFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get allDevicesFilter;
+
+  /// No description provided for @ungroupedFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Ungrouped'**
+  String get ungroupedFilter;
+
+  /// No description provided for @onlineStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Online'**
+  String get onlineStatus;
+
+  /// No description provided for @offlineStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get offlineStatus;
+
+  /// No description provided for @noDevicesMatched.
+  ///
+  /// In en, this message translates to:
+  /// **'No devices match the filter'**
+  String get noDevicesMatched;
+
+  /// No description provided for @deviceOptionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Device Options'**
+  String get deviceOptionsTitle;
+
+  /// No description provided for @groupsTabTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Groups'**
+  String get groupsTabTitle;
+
+  /// No description provided for @createGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Group'**
+  String get createGroup;
+
+  /// No description provided for @editGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Group'**
+  String get editGroup;
+
+  /// No description provided for @deleteGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Group'**
+  String get deleteGroup;
+
+  /// No description provided for @deleteGroupConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to delete \"{groupName}\"? What should be done with the devices in it?'**
+  String deleteGroupConfirm(Object groupName);
+
+  /// No description provided for @moveDevicesToUngrouped.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to Ungrouped'**
+  String get moveDevicesToUngrouped;
+
+  /// No description provided for @deleteAllDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete All'**
+  String get deleteAllDevices;
+
+  /// No description provided for @groupNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Group Name'**
+  String get groupNameLabel;
+
+  /// No description provided for @enterGroupNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter group name'**
+  String get enterGroupNameHint;
+
+  /// No description provided for @emptyGroupMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'No devices in this group'**
+  String get emptyGroupMessage;
+
+  /// No description provided for @saveChangesButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChangesButton;
+
+  /// No description provided for @createGroupSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Group created successfully'**
+  String get createGroupSuccess;
+
+  /// No description provided for @editGroupSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Group modified successfully'**
+  String get editGroupSuccess;
+
+  /// No description provided for @groupNotSupportedError.
+  ///
+  /// In en, this message translates to:
+  /// **'Sorry, your server does not support creating groups directly from the app. Please create the group from the web control panel.'**
+  String get groupNotSupportedError;
+
+  /// No description provided for @emptyGroupNameValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter group name'**
+  String get emptyGroupNameValidation;
+
+  /// No description provided for @showOnMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Show on Map'**
+  String get showOnMap;
+
+  /// No description provided for @showOnMapSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Show all group devices on the map'**
+  String get showOnMapSubtitle;
+
+  /// No description provided for @editGroupSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit name and manage devices'**
+  String get editGroupSubtitle;
+
+  /// No description provided for @addDevicesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Devices'**
+  String addDevicesCount(Object count);
+
+  /// No description provided for @pressToCreateGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Press + to create a new group'**
+  String get pressToCreateGroup;
+
+  /// No description provided for @historyTabTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get historyTabTitle;
+
+  /// No description provided for @searchVehicleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by vehicle name or number...'**
+  String get searchVehicleHint;
+
+  /// No description provided for @viewTripsButton.
+  ///
+  /// In en, this message translates to:
+  /// **'View Trips'**
+  String get viewTripsButton;
+
+  /// No description provided for @tripsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Trip(s)'**
+  String tripsCount(Object count);
+
+  /// No description provided for @refreshTrips.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refreshTrips;
+
+  /// No description provided for @loadingTrips.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading trips...'**
+  String get loadingTrips;
+
+  /// No description provided for @selectVehicleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Vehicle'**
+  String get selectVehicleTitle;
+
+  /// No description provided for @selectVehicleSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a vehicle from above to view its trips'**
+  String get selectVehicleSubtitle;
+
+  /// No description provided for @noTripsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Trips'**
+  String get noTripsTitle;
+
+  /// No description provided for @noTripsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No trips found in the specified period'**
+  String get noTripsSubtitle;
+
+  /// No description provided for @removeFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Filters'**
+  String get removeFilters;
+
+  /// No description provided for @noVehiclesMatchedSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'No vehicles match the search'**
+  String get noVehiclesMatchedSearch;
+
+  /// No description provided for @totalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get totalLabel;
+
+  /// No description provided for @movingStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Moving'**
+  String get movingStatus;
+
+  /// No description provided for @tryChangingFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Try changing search or filter options'**
+  String get tryChangingFilters;
+
+  /// No description provided for @checkNetworkConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your network connection'**
+  String get checkNetworkConnection;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @idleStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Idle'**
+  String get idleStatus;
+
+  /// No description provided for @noGpsSignal.
+  ///
+  /// In en, this message translates to:
+  /// **'No GPS Signal'**
+  String get noGpsSignal;
+
+  /// No description provided for @mapLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Map'**
+  String get mapLabel;
+
+  /// No description provided for @sendCommand.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Command'**
+  String get sendCommand;
+
+  /// No description provided for @sendSmsCommand.
+  ///
+  /// In en, this message translates to:
+  /// **'SMS Command'**
+  String get sendSmsCommand;
+
+  /// No description provided for @editDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Device'**
+  String get editDevice;
+
+  /// No description provided for @unpin.
+  ///
+  /// In en, this message translates to:
+  /// **'Unpin'**
+  String get unpin;
+
+  /// No description provided for @pinToTop.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin to Top'**
+  String get pinToTop;
+
+  /// No description provided for @lastConnectionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Last connection: {time}'**
+  String lastConnectionLabel(Object time);
+
+  /// No description provided for @km.
+  ///
+  /// In en, this message translates to:
+  /// **'km'**
+  String get km;
+
+  /// No description provided for @kmh.
+  ///
+  /// In en, this message translates to:
+  /// **'km/h'**
+  String get kmh;
+
+  /// No description provided for @selectedDevicesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected: {count} Devices'**
+  String selectedDevicesCount(Object count);
+
+  /// No description provided for @activeDevicesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'| {count} Active'**
+  String activeDevicesCount(Object count);
+
+  /// No description provided for @selectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Select All'**
+  String get selectAll;
+
+  /// No description provided for @clearAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All'**
+  String get clearAll;
+
+  /// No description provided for @searchDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for device...'**
+  String get searchDevice;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @groupsLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading groups'**
+  String get groupsLoadError;
+
+  /// No description provided for @noGroupsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No groups yet'**
+  String get noGroupsYet;
+
+  /// No description provided for @todayPreset.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get todayPreset;
+
+  /// No description provided for @yesterdayPreset.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterdayPreset;
+
+  /// No description provided for @weekPreset.
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get weekPreset;
+
+  /// No description provided for @monthPreset.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get monthPreset;
+
+  /// No description provided for @customPreset.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get customPreset;
+
+  /// No description provided for @longTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'🛣️ Long'**
+  String get longTrip;
+
+  /// No description provided for @shortTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'📍 Short'**
+  String get shortTrip;
+
+  /// No description provided for @stops.
+  ///
+  /// In en, this message translates to:
+  /// **'🛑 Stops'**
+  String get stops;
+
+  /// No description provided for @fastTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'⚡ Fast'**
+  String get fastTrip;
+
+  /// No description provided for @alerts.
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ Alerts'**
+  String get alerts;
+
+  /// No description provided for @night.
+  ///
+  /// In en, this message translates to:
+  /// **'🌙 Night'**
+  String get night;
+
+  /// No description provided for @distanceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get distanceLabel;
+
+  /// No description provided for @durationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get durationLabel;
+
+  /// No description provided for @avgSpeedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg. Speed'**
+  String get avgSpeedLabel;
+
+  /// No description provided for @maxSpeedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Max'**
+  String get maxSpeedLabel;
+
+  /// No description provided for @overspeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Overspeed'**
+  String get overspeed;
+
+  /// No description provided for @normalTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get normalTrip;
+
+  /// No description provided for @stopsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Stops'**
+  String stopsCount(Object count);
+
+  /// No description provided for @pointsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Points'**
+  String pointsCount(Object count);
+
+  /// No description provided for @statsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Stats'**
+  String get statsTab;
+
+  /// No description provided for @timelineTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Timeline'**
+  String get timelineTab;
+
+  /// No description provided for @stopsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Stops'**
+  String get stopsTab;
+
+  /// No description provided for @noGpsPoints.
+  ///
+  /// In en, this message translates to:
+  /// **'No GPS points for this trip'**
+  String get noGpsPoints;
+
+  /// No description provided for @startPoint.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get startPoint;
+
+  /// No description provided for @endPoint.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get endPoint;
+
+  /// No description provided for @stopIndex.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop {index}'**
+  String stopIndex(Object index);
+
+  /// No description provided for @timeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get timeTitle;
+
+  /// No description provided for @altitudeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Altitude'**
+  String get altitudeTitle;
+
+  /// No description provided for @meterUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'m'**
+  String get meterUnit;
+
+  /// No description provided for @speedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Speed'**
+  String get speedLabel;
+
+  /// No description provided for @noStopsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No stops'**
+  String get noStopsTitle;
+
+  /// No description provided for @noStopsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The trip was continuous without any stops'**
+  String get noStopsSubtitle;
+
+  /// No description provided for @noEventsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No events'**
+  String get noEventsTitle;
+
+  /// No description provided for @avgSpeedCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg. Speed'**
+  String get avgSpeedCard;
+
+  /// No description provided for @maxSpeedCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Max Speed'**
+  String get maxSpeedCard;
+
+  /// No description provided for @stopsCountCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Stops Count'**
+  String get stopsCountCard;
+
+  /// No description provided for @stopTimeCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop Time'**
+  String get stopTimeCard;
+
+  /// No description provided for @movingTimeCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Moving Time'**
+  String get movingTimeCard;
+
+  /// No description provided for @pointsCard.
+  ///
+  /// In en, this message translates to:
+  /// **'GPS Points'**
+  String get pointsCard;
+
+  /// No description provided for @movingStopRatio.
+  ///
+  /// In en, this message translates to:
+  /// **'Moving / Stopping Ratio'**
+  String get movingStopRatio;
+
+  /// No description provided for @tripEfficiency.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip Efficiency'**
+  String get tripEfficiency;
+
+  /// No description provided for @efficiencyExcellent.
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent'**
+  String get efficiencyExcellent;
+
+  /// No description provided for @efficiencyGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get efficiencyGood;
+
+  /// No description provided for @efficiencyAverage.
+  ///
+  /// In en, this message translates to:
+  /// **'Average'**
+  String get efficiencyAverage;
+
+  /// No description provided for @efficiencyPoor.
+  ///
+  /// In en, this message translates to:
+  /// **'Poor'**
+  String get efficiencyPoor;
+
+  /// No description provided for @notAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Not available'**
+  String get notAvailable;
+
+  /// No description provided for @justNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get justNow;
+
+  /// No description provided for @minutesAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}m ago'**
+  String minutesAgo(Object count);
+
+  /// No description provided for @hoursAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}h ago'**
+  String hoursAgo(Object count);
+
+  /// No description provided for @daysAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}d ago'**
+  String daysAgo(Object count);
+
+  /// No description provided for @optionsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Options'**
+  String get optionsTab;
+
+  /// No description provided for @groupsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Groups'**
+  String get groupsTab;
+
+  /// No description provided for @devicesTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices'**
+  String get devicesTab;
+
+  /// No description provided for @quickStatsTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total {count}'**
+  String quickStatsTotal(Object count);
+
+  /// No description provided for @quickStatsOnline.
+  ///
+  /// In en, this message translates to:
+  /// **'Online {count}'**
+  String quickStatsOnline(Object count);
+
+  /// No description provided for @quickStatsOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline {count}'**
+  String quickStatsOffline(Object count);
+
+  /// No description provided for @viewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View All'**
+  String get viewAll;
+
+  /// No description provided for @noResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get noResults;
+
+  /// No description provided for @noDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'No devices found'**
+  String get noDevices;
+
+  /// No description provided for @historyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get historyLabel;
+
+  /// No description provided for @sendCommandDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Device control commands'**
+  String get sendCommandDesc;
+
+  /// No description provided for @sendSms.
+  ///
+  /// In en, this message translates to:
+  /// **'SMS Command'**
+  String get sendSms;
+
+  /// No description provided for @sendSmsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Send command via SMS'**
+  String get sendSmsDesc;
+
+  /// No description provided for @editDeviceDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Change name or settings'**
+  String get editDeviceDesc;
+
+  /// No description provided for @deleteDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Device'**
+  String get deleteDevice;
+
+  /// No description provided for @deleteDeviceDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Permanent delete'**
+  String get deleteDeviceDesc;
+
+  /// No description provided for @groupsLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load groups'**
+  String get groupsLoadFailed;
+
+  /// No description provided for @noGroups.
+  ///
+  /// In en, this message translates to:
+  /// **'No groups found'**
+  String get noGroups;
+
+  /// No description provided for @manageGroups.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Groups'**
+  String get manageGroups;
+
+  /// No description provided for @addNewDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Add New Device'**
+  String get addNewDevice;
+
+  /// No description provided for @tools.
+  ///
+  /// In en, this message translates to:
+  /// **'Tools'**
+  String get tools;
+
+  /// No description provided for @setup.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup'**
+  String get setup;
+
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logout;
+
+  /// No description provided for @settingsSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings saved successfully'**
+  String get settingsSaved;
+
+  /// No description provided for @vehiclesTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicles'**
+  String get vehiclesTab;
+
+  /// No description provided for @smsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'SMS'**
+  String get smsTab;
+
+  /// No description provided for @unitsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Units'**
+  String get unitsSection;
+
+  /// No description provided for @distanceMeasure.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance Measurement'**
+  String get distanceMeasure;
+
+  /// No description provided for @distanceUnitTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance Unit'**
+  String get distanceUnitTitle;
+
+  /// No description provided for @capacityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Capacity'**
+  String get capacityLabel;
+
+  /// No description provided for @capacityUnitTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Capacity Unit'**
+  String get capacityUnitTitle;
+
+  /// No description provided for @altitudeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Altitude'**
+  String get altitudeLabel;
+
+  /// No description provided for @altitudeUnitTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Altitude Unit'**
+  String get altitudeUnitTitle;
+
+  /// No description provided for @timeSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get timeSection;
+
+  /// No description provided for @weekDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Week Days'**
+  String get weekDays;
+
+  /// No description provided for @startOfWeekTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start of Week'**
+  String get startOfWeekTitle;
+
+  /// No description provided for @timezoneLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Timezone'**
+  String get timezoneLabel;
+
+  /// No description provided for @daylightSavingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Daylight Saving'**
+  String get daylightSavingLabel;
+
+  /// No description provided for @languageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get languageLabel;
+
+  /// No description provided for @fleetManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Fleet Management'**
+  String get fleetManagement;
+
+  /// No description provided for @vehicleGroups.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle Groups'**
+  String get vehicleGroups;
+
+  /// No description provided for @driversList.
+  ///
+  /// In en, this message translates to:
+  /// **'Drivers List'**
+  String get driversList;
+
+  /// No description provided for @driversTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Drivers'**
+  String get driversTitle;
+
+  /// No description provided for @eventsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Events'**
+  String get eventsLabel;
+
+  /// No description provided for @templatesSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Templates'**
+  String get templatesSection;
+
+  /// No description provided for @smsTemplates.
+  ///
+  /// In en, this message translates to:
+  /// **'SMS Templates'**
+  String get smsTemplates;
+
+  /// No description provided for @gprsTemplates.
+  ///
+  /// In en, this message translates to:
+  /// **'GPRS Templates'**
+  String get gprsTemplates;
+
+  /// No description provided for @smsGatewaySection.
+  ///
+  /// In en, this message translates to:
+  /// **'SMS Gateway'**
+  String get smsGatewaySection;
+
+  /// No description provided for @enableSms.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable SMS'**
+  String get enableSms;
+
+  /// No description provided for @gatewayTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway Type'**
+  String get gatewayTypeLabel;
+
+  /// No description provided for @selectLanguageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Language'**
+  String get selectLanguageTitle;
+
+  /// No description provided for @noDataAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No data available'**
+  String get noDataAvailable;
+
+  /// No description provided for @closeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get closeButton;
+
+  /// No description provided for @fetchingFromServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Fetching from server...'**
+  String get fetchingFromServer;
+
+  /// No description provided for @fetching.
+  ///
+  /// In en, this message translates to:
+  /// **'Fetching...'**
+  String get fetching;
 }
 
 class _AppLocalizationsDelegate

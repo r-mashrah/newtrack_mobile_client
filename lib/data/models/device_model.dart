@@ -35,40 +35,105 @@ class DeviceModel with _$DeviceModel {
   factory DeviceModel.fromJson(Map<String, dynamic> json) =>
       _$DeviceModelFromJson(json);
 
-  // دالة لتحويل بيانات GPSWox API إلى الـ Model الخاص بنا
-  factory DeviceModel.fromGpswoxJson(Map<String, dynamic> json) {
-    // معالجة الحالة (Status)
+  factory DeviceModel.fromGpswoxJson(Map<String, dynamic> rawJson) {
+    // بعض مسارات GPSWox ترسل البيانات في الجذر، وبعضها في device_data
+    // لذلك سننشئ دالة مساعدة تبحث في الاثنين لضمان استخراج القيم الصحيحة
+    final deviceData = rawJson['device_data'] as Map<String, dynamic>? ?? {};
+
+    dynamic getValue(String key) {
+      if (rawJson[key] != null && rawJson[key] != '') return rawJson[key];
+      if (deviceData[key] != null && deviceData[key] != '')
+        return deviceData[key];
+      return null;
+    }
+
+    // إصلاح مشكلة التواريخ التي تأتي مع AM/PM من GPSWox
+    String parseGpswoxTime(String? timeStr) {
+      if (timeStr == null || timeStr.isEmpty || timeStr.toLowerCase().contains('not connected')) {
+        return DateTime.now().toIso8601String();
+      }
+      // التأكد من احتوائه على أرقام ليكون تاريخاً صالحاً
+      if (!RegExp(r'\d').hasMatch(timeStr)) {
+        return DateTime.now().toIso8601String();
+      }
+      try {
+        // إذا كان التاريخ يحتوي على AM/PM أو تنسيق غير قياسي
+        if (timeStr.toLowerCase().contains('am') ||
+            timeStr.toLowerCase().contains('pm')) {
+          final cleanStr = timeStr
+              .replaceAll(RegExp(r'\s*(am|pm)', caseSensitive: false), '')
+              .trim();
+          return DateTime.parse(
+            cleanStr.replaceAll(' ', 'T'),
+          ).toIso8601String();
+        }
+        return DateTime.parse(timeStr.replaceAll(' ', 'T')).toIso8601String();
+      } catch (e) {
+        // محاولة أخرى للتنسيقات الشائعة في GPSWox
+        try {
+           return DateTime.parse(timeStr).toIso8601String();
+        } catch (_) {
+           return DateTime.now().toIso8601String();
+        }
+      }
+    }
+
+    final timestamp = parseGpswoxTime(getValue('time')?.toString());
+    
+    // معالجة الحالة (Status) بشكل أكثر دقة
     String status = 'offline';
-    final onlineStr = json['online']?.toString().toLowerCase();
-    if (onlineStr == 'online') {
-      final double s = double.tryParse(json['speed']?.toString() ?? '0') ?? 0;
-      status = s > 5 ? 'moving' : 'stopped';
-    } else if (onlineStr == 'ack') {
+    final onlineValue = getValue('online');
+    final speed = double.tryParse(getValue('speed')?.toString() ?? '0') ?? 0.0;
+    
+    // في نظام GPSWox، غالباً ما يكون 1 أو "online" يعني متصل
+    bool isOnline = onlineValue == 1 || 
+                    onlineValue == '1' || 
+                    onlineValue == true || 
+                    onlineValue.toString().toLowerCase() == 'online';
+
+    if (isOnline) {
+      if (speed > 5) {
+        status = 'moving';
+      } else {
+        // إذا كان المحرك يعمل (engine) ولكنه لا يتحرك، فهو idle
+        final engine = getValue('engine');
+        if (engine == 1 || engine == '1' || engine == true) {
+          status = 'idle';
+        } else {
+          status = 'stopped';
+        }
+      }
+    } else if (onlineValue.toString().toLowerCase() == 'ack') {
       status = 'parked';
     }
 
     return DeviceModel(
-      id: json['id']?.toString() ?? '',
-      name: json['name']?.toString() ?? 'Unknown Device',
-      imei: json['imei']?.toString() ?? '',
-      plateNumber: json['plate_number']?.toString(),
-      simNumber: json['sim_number']?.toString(),
-      model: json['device_model']?.toString(),
-      icon: json['icon_type']?.toString(),
-      color: json['tail_color']?.toString(),
-      isActive: json['active'] == true || json['active'] == 1 || json['active'] == '1',
+      id: getValue('id')?.toString() ?? '',
+      name: getValue('name')?.toString() ?? 'Unknown Device',
+      imei: getValue('imei')?.toString() ?? '',
+      plateNumber: getValue('plate_number')?.toString(),
+      simNumber: getValue('sim_number')?.toString(),
+      model: getValue('device_model')?.toString(),
+      icon: getValue('icon_type')?.toString(),
+      color: getValue('tail_color')?.toString(),
+      isActive:
+          getValue('active') == true ||
+          getValue('active') == 1 ||
+          getValue('active') == '1',
       status: status,
       lastLocation: {
-        'latitude': double.tryParse(json['lat']?.toString() ?? '0') ?? 0.0,
-        'longitude': double.tryParse(json['lng']?.toString() ?? '0') ?? 0.0,
-        'timestamp': json['time']?.toString() ?? DateTime.now().toIso8601String(),
-        'altitude': double.tryParse(json['altitude']?.toString() ?? '0'),
-        'speed': double.tryParse(json['speed']?.toString() ?? '0'),
-        'bearing': double.tryParse(json['course']?.toString() ?? '0'),
+        'latitude': double.tryParse(getValue('lat')?.toString() ?? '0') ?? 0.0,
+        'longitude': double.tryParse(getValue('lng')?.toString() ?? '0') ?? 0.0,
+        'timestamp': timestamp,
+        'altitude': double.tryParse(getValue('altitude')?.toString() ?? '0'),
+        'speed': speed,
+        'bearing': double.tryParse(getValue('course')?.toString() ?? '0'),
       },
-      speed: double.tryParse(json['speed']?.toString() ?? '0'),
-      lastUpdate: json['time']?.toString(),
-      additionalData: json, // حفظ كامل البيانات الأصلية كبيانات إضافية
+      speed: speed,
+      lastUpdate: timestamp,
+      driverName: getValue('driver_name')?.toString(),
+      driverPhone: getValue('driver_phone')?.toString(),
+      additionalData: rawJson,
     );
   }
 
@@ -78,6 +143,7 @@ class DeviceModel with _$DeviceModel {
       id: id,
       name: name,
       imei: imei,
+      group: additionalData?['extracted_group_id']?.toString() ?? additionalData?['group_id']?.toString(),
       plateNumber: plateNumber,
       simNumber: simNumber,
       model: model,

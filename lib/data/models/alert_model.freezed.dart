@@ -30,6 +30,8 @@ mixin _$AlertModel {
   String get notificationType => throw _privateConstructorUsedError;
   bool get isActive => throw _privateConstructorUsedError;
   bool get commandEnabled => throw _privateConstructorUsedError;
+  int get overspeed => throw _privateConstructorUsedError;
+  List<String> get geofenceIds => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -53,7 +55,9 @@ abstract class $AlertModelCopyWith<$Res> {
       bool outsideGeofence,
       String notificationType,
       bool isActive,
-      bool commandEnabled});
+      bool commandEnabled,
+      int overspeed,
+      List<String> geofenceIds});
 }
 
 /// @nodoc
@@ -79,6 +83,8 @@ class _$AlertModelCopyWithImpl<$Res, $Val extends AlertModel>
     Object? notificationType = null,
     Object? isActive = null,
     Object? commandEnabled = null,
+    Object? overspeed = null,
+    Object? geofenceIds = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -121,6 +127,14 @@ class _$AlertModelCopyWithImpl<$Res, $Val extends AlertModel>
           ? _value.commandEnabled
           : commandEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
+      overspeed: null == overspeed
+          ? _value.overspeed
+          : overspeed // ignore: cast_nullable_to_non_nullable
+              as int,
+      geofenceIds: null == geofenceIds
+          ? _value.geofenceIds
+          : geofenceIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ) as $Val);
   }
 }
@@ -143,7 +157,9 @@ abstract class _$$AlertModelImplCopyWith<$Res>
       bool outsideGeofence,
       String notificationType,
       bool isActive,
-      bool commandEnabled});
+      bool commandEnabled,
+      int overspeed,
+      List<String> geofenceIds});
 }
 
 /// @nodoc
@@ -167,6 +183,8 @@ class __$$AlertModelImplCopyWithImpl<$Res>
     Object? notificationType = null,
     Object? isActive = null,
     Object? commandEnabled = null,
+    Object? overspeed = null,
+    Object? geofenceIds = null,
   }) {
     return _then(_$AlertModelImpl(
       id: null == id
@@ -209,6 +227,14 @@ class __$$AlertModelImplCopyWithImpl<$Res>
           ? _value.commandEnabled
           : commandEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
+      overspeed: null == overspeed
+          ? _value.overspeed
+          : overspeed // ignore: cast_nullable_to_non_nullable
+              as int,
+      geofenceIds: null == geofenceIds
+          ? _value._geofenceIds
+          : geofenceIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
@@ -226,8 +252,11 @@ class _$AlertModelImpl extends _AlertModel {
       this.outsideGeofence = false,
       required this.notificationType,
       this.isActive = true,
-      this.commandEnabled = false})
-      : super._();
+      this.commandEnabled = false,
+      this.overspeed = 0,
+      final List<String> geofenceIds = const []})
+      : _geofenceIds = geofenceIds,
+        super._();
 
   factory _$AlertModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$AlertModelImplFromJson(json);
@@ -256,10 +285,21 @@ class _$AlertModelImpl extends _AlertModel {
   @override
   @JsonKey()
   final bool commandEnabled;
+  @override
+  @JsonKey()
+  final int overspeed;
+  final List<String> _geofenceIds;
+  @override
+  @JsonKey()
+  List<String> get geofenceIds {
+    if (_geofenceIds is EqualUnmodifiableListView) return _geofenceIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_geofenceIds);
+  }
 
   @override
   String toString() {
-    return 'AlertModel(id: $id, name: $name, deviceId: $deviceId, deviceName: $deviceName, type: $type, insideGeofence: $insideGeofence, outsideGeofence: $outsideGeofence, notificationType: $notificationType, isActive: $isActive, commandEnabled: $commandEnabled)';
+    return 'AlertModel(id: $id, name: $name, deviceId: $deviceId, deviceName: $deviceName, type: $type, insideGeofence: $insideGeofence, outsideGeofence: $outsideGeofence, notificationType: $notificationType, isActive: $isActive, commandEnabled: $commandEnabled, overspeed: $overspeed, geofenceIds: $geofenceIds)';
   }
 
   @override
@@ -283,7 +323,11 @@ class _$AlertModelImpl extends _AlertModel {
             (identical(other.isActive, isActive) ||
                 other.isActive == isActive) &&
             (identical(other.commandEnabled, commandEnabled) ||
-                other.commandEnabled == commandEnabled));
+                other.commandEnabled == commandEnabled) &&
+            (identical(other.overspeed, overspeed) ||
+                other.overspeed == overspeed) &&
+            const DeepCollectionEquality()
+                .equals(other._geofenceIds, _geofenceIds));
   }
 
   @JsonKey(ignore: true)
@@ -299,7 +343,9 @@ class _$AlertModelImpl extends _AlertModel {
       outsideGeofence,
       notificationType,
       isActive,
-      commandEnabled);
+      commandEnabled,
+      overspeed,
+      const DeepCollectionEquality().hash(_geofenceIds));
 
   @JsonKey(ignore: true)
   @override
@@ -326,7 +372,9 @@ abstract class _AlertModel extends AlertModel {
       final bool outsideGeofence,
       required final String notificationType,
       final bool isActive,
-      final bool commandEnabled}) = _$AlertModelImpl;
+      final bool commandEnabled,
+      final int overspeed,
+      final List<String> geofenceIds}) = _$AlertModelImpl;
   const _AlertModel._() : super._();
 
   factory _AlertModel.fromJson(Map<String, dynamic> json) =
@@ -352,6 +400,10 @@ abstract class _AlertModel extends AlertModel {
   bool get isActive;
   @override
   bool get commandEnabled;
+  @override
+  int get overspeed;
+  @override
+  List<String> get geofenceIds;
   @override
   @JsonKey(ignore: true)
   _$$AlertModelImplCopyWith<_$AlertModelImpl> get copyWith =>

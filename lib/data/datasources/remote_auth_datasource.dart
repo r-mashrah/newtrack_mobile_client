@@ -6,7 +6,7 @@ import '../../core/constants/api_constants.dart';
 import '../../core/services/caching_service.dart';
 import '../models/user_model.dart';
 import '../../domain/entities/user_entity.dart';
-import 'mock_auth_datasource.dart'; // للحصول على واجهة AuthDataSource
+import 'auth_datasource.dart'; // للحصول على واجهة AuthDataSource
 
 class RemoteAuthDataSource implements AuthDataSource {
   final ApiClient _apiClient;
@@ -16,7 +16,11 @@ class RemoteAuthDataSource implements AuthDataSource {
   static const String _userKey = 'authenticated_user';
   static const String _rememberMeKey = 'remember_me';
 
-  RemoteAuthDataSource(this._apiClient, this._cachingService, this._secureStorage);
+  RemoteAuthDataSource(
+    this._apiClient,
+    this._cachingService,
+    this._secureStorage,
+  );
 
   UserEntity? _currentUser;
 
@@ -29,18 +33,17 @@ class RemoteAuthDataSource implements AuthDataSource {
     try {
       final response = await _apiClient.post(
         ApiConstants.login,
-        data: {
-          'email': username,
-          'password': password,
-        },
+        data: {'email': username, 'password': password},
       );
 
       if (response.statusCode == 200 && response.data != null) {
         final data = response.data;
         // التحقق من الاستجابة حسب هيكلية GPSWox
-        if (data['status'] == 1 || data['status'] == true || data['user_api_hash'] != null) {
+        if (data['status'] == 1 ||
+            data['status'] == true ||
+            data['user_api_hash'] != null) {
           final userApiHash = data['user_api_hash'];
-          
+
           // إنشاء الكيان الخاص بالمستخدم
           final user = UserEntity(
             id: username, // كمعرف مؤقت بما أن تسجيل الدخول قد لا يعيد كامل تفاصيل المستخدم
@@ -52,10 +55,12 @@ class RemoteAuthDataSource implements AuthDataSource {
 
           _currentUser = user;
           _apiClient.setUserApiHash(userApiHash);
-          
+
           return user;
         } else {
-          throw Exception(data['message'] ?? 'فشل تسجيل الدخول: تحقق من بياناتك');
+          throw Exception(
+            data['message'] ?? 'فشل تسجيل الدخول: تحقق من بياناتك',
+          );
         }
       } else {
         throw Exception('خطأ في السيرفر: ${response.statusCode}');
@@ -95,7 +100,7 @@ class RemoteAuthDataSource implements AuthDataSource {
         return null;
       }
     }
-    
+
     return null;
   }
 

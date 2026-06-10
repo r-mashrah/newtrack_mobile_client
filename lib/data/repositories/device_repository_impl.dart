@@ -1,7 +1,7 @@
 import '../../domain/entities/device_entity.dart';
 import '../../domain/entities/location_entity.dart';
 import '../../domain/repositories/device_repository.dart';
-import '../datasources/mock_device_datasource.dart';
+import '../datasources/device_datasource.dart';
 
 class DeviceRepositoryImpl implements DeviceRepository {
   final DeviceDataSource _dataSource;

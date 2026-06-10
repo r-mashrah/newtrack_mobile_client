@@ -42,8 +42,8 @@ class MyApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       // نستخدم الثيم الموحد من AppTheme مباشرة دون تلاعب بالألوان
       theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: themeState.themeMode,
+      darkTheme: AppTheme.lightTheme,
+      themeMode: ThemeMode.light,
       routerConfig: router,
       locale: locale,
       supportedLocales: const [Locale('ar', ''), Locale('en', '')],
